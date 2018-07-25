@@ -8,6 +8,8 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.util.Log;
 import android.location.Location;
 import android.view.KeyEvent;
@@ -24,6 +26,7 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -49,6 +52,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private EditText mHeadingOrigin;
     private EditText mHeadingDest;
     private TextView mHeading;
+    private Marker originMarker;
+    private Marker destMarker;
+    private Marker searchMarker;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
 
 
     @Override
@@ -83,7 +91,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         // Add a marker in UAViation and move the camera
         LatLng UAV = new LatLng(49.238074, -122.853361);
-        mMap.addMarker(new MarkerOptions().position(UAV).title("Marker in UAViation Aerial Solutions"));
+        MarkerOptions options = new MarkerOptions()
+                .position(UAV).title("Marker in UAViation Aerial Solutions")
+        .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_company_location));
+        searchMarker = mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -154,6 +165,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     private void geoLocate() {
+        if (searchMarker != null){
+            searchMarker.remove();
+        }
         Log.d(TAG, "geoLocate: geolocating");
 
         String searchString = mSearchText.getText().toString();
@@ -228,6 +242,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private double getHeading(String origin, String dest) {
+        addOriginMarker(origin);
+        addDestMarker(dest);
         return computeHeading(convertoLatLon(origin), convertoLatLon(dest));
     }
 
@@ -236,8 +252,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             String org = mHeadingOrigin.getText().toString();
             String desti = mHeadingDest.getText().toString();
             mHeading.setText(" Heading: " + getHeading(org, desti));
-        } catch (NumberFormatException e){
-            //do nothing
+        } catch (NumberFormatException e) {
+            mHeading.setText("Heading: ");
         }
     }
 
@@ -247,6 +263,30 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double lon = Double.parseDouble(latlonString[1]);
         LatLng latlon = new LatLng(lat, lon);
         return latlon;
+    }
+
+    private void addOriginMarker(String originStr) {
+        if (originMarker != null) {
+            originMarker.remove();
+        }
+        LatLng origCoords = convertoLatLon(originStr);
+        MarkerOptions options = new MarkerOptions()
+                .position(origCoords)
+                .title("Origin")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE));
+        originMarker = mMap.addMarker(options);
+    }
+
+    private void addDestMarker(String destStr) {
+        if (destMarker != null) {
+            destMarker.remove();
+        }
+        LatLng destCoords = convertoLatLon(destStr);
+        MarkerOptions options = new MarkerOptions()
+                .position(destCoords)
+                .title("Tie Point")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE));
+        destMarker = mMap.addMarker(options);
     }
 
 

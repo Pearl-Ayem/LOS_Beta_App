@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/UXSDKDJI.iml" filepath="$PROJECT_DIR$/UXSDKDJI.iml" />
+      <module fileurl="file://$PROJECT_DIR$/LOS- MapsTest.iml" filepath="$PROJECT_DIR$/LOS- MapsTest.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
