@@ -1,7 +1,7 @@
 package com.dji.uxsdkdemo;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -13,14 +13,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
-import static com.dji.uxsdkdemo.MapsActivity.mMap;
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
-public class HeadingActivity extends MapsActivity {
+public class HeadingActivity extends AppCompatActivity {
 
     private Marker originMarker;
     private Marker destMarker;
-    private static TextView mHeading;
+    private  TextView mHeading;
 
     static EditText mHeadingOrigin;
     static EditText mHeadingDest;
@@ -32,6 +31,7 @@ public class HeadingActivity extends MapsActivity {
         mHeadingOrigin = (EditText) findViewById(R.id.origin);
         mHeadingDest = (EditText) findViewById(R.id.dest);
         mHeading = (TextView) findViewById(R.id.heading);
+        initHeading();
     }
 
     private void initHeading(){
@@ -98,7 +98,7 @@ public class HeadingActivity extends MapsActivity {
                 .title("Origin")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
                 .draggable(true);
-        originMarker = mMap.addMarker(options);
+        originMarker = MapsActivity.mMap.addMarker(options);
     }
 
     private void addDestMarker(String destStr) {
@@ -112,6 +112,6 @@ public class HeadingActivity extends MapsActivity {
                 .title("Tie Point")
                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
                 .draggable(true);
-        destMarker = mMap.addMarker(options);
+        destMarker = MapsActivity.mMap.addMarker(options);
     }
 }

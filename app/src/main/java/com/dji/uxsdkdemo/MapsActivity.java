@@ -1,6 +1,7 @@
 package com.dji.uxsdkdemo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -19,6 +20,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,13 +53,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private static final String TAG = "MapActivity";
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private EditText mSearchText;
-//    private EditText mHeadingOrigin;
-//    private EditText mHeadingDest;
-//    private TextView mHeading;
-//    private Marker originMarker;
-//    private Marker destMarker;
     private Marker searchMarker;
-
+    private ImageButton headingBtn;
 
 
     @Override
@@ -65,16 +62,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
         mSearchText = (EditText) findViewById(R.id.input_search);
-//        mHeadingOrigin = (EditText) findViewById(R.id.origin);
-//        mHeadingDest = (EditText) findViewById(R.id.dest);
-//        mHeading = (TextView) findViewById(R.id.heading);
 
         Log.d(TAG, "initMap: initializing map");
-        // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
-
     }
 
 
@@ -90,12 +82,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
         // Add a marker in UAViation and move the camera
         LatLng UAV = new LatLng(49.238074, -122.853361);
+
         MarkerOptions options = new MarkerOptions()
                 .position(UAV).title("Marker in UAViation Aerial Solutions")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_company_location));
         searchMarker = mMap.addMarker(options);
+
         mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
 
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
@@ -132,38 +127,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 return false;
             }
         });
-
-//        HeadingActivity.mHeadingOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                if (i == EditorInfo.IME_NULL
-//                        || i == EditorInfo.IME_ACTION_DONE
-//                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-//                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-//                    //execute our method for searching
-//                    HeadingActivity.showHeading(textView);
-//                }
-//                return false;
-//            }
-//        });
-//
-//       HeadingActivity. mHeadingDest.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-//            @Override
-//            public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-//                if (i == EditorInfo.IME_NULL
-//                        || i == EditorInfo.IME_ACTION_DONE
-//                        || keyEvent.getAction() == KeyEvent.ACTION_DOWN
-//                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-//                    //execute our method for searching
-//                    HeadingActivity.showHeading(textView);
-//                }
-//                return false;
-//            }
-//        });
-
-
+        headingBtn = (ImageButton)findViewById(R.id.heading_launcher);
+        headingBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent headingIntent = new Intent(MapsActivity.this, HeadingActivity.class);
+                startActivity(headingIntent);
+            }
+        });
     }
-
 
     private void geoLocate() {
         if (searchMarker != null) {
@@ -241,61 +213,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void hideSoftKeyboard() {
         this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
     }
-
-
-
-
-
-//    private double getHeading(String origin, String dest) {
-//        addOriginMarker(origin);
-//        addDestMarker(dest);
-//        return computeHeading(convertoLatLon(origin), convertoLatLon(dest));
-//    }
-//
-//    private void showHeading(View v) {
-//        try {
-//            String org = mHeadingOrigin.getText().toString();
-//            String desti = mHeadingDest.getText().toString();
-//            mHeading.setText(" Heading: " + getHeading(org, desti));
-//        } catch (NumberFormatException e) {
-//            mHeading.setText("Heading: ");
-//        }
-//    }
-//
-//    private LatLng convertoLatLon(String input) {
-//        String[] latlonString = input.split(",");
-//        double lat = Double.parseDouble(latlonString[0]);
-//        double lon = Double.parseDouble(latlonString[1]);
-//        LatLng latlon = new LatLng(lat, lon);
-//        return latlon;
-//    }
-//
-//    private void addOriginMarker(String originStr) {
-//        if (originMarker != null) {
-//            originMarker.remove();
-//        }
-//        LatLng origCoords = convertoLatLon(originStr);
-//        MarkerOptions options = new MarkerOptions()
-//                .position(origCoords)
-//                .title("Origin")
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ROSE))
-//                .draggable(true);
-//        originMarker = mMap.addMarker(options);
-//    }
-//
-//    private void addDestMarker(String destStr) {
-//        if (destMarker != null) {
-//            destMarker.remove();
-//        }
-//
-//        LatLng destCoords = convertoLatLon(destStr);
-//        MarkerOptions options = new MarkerOptions()
-//                .position(destCoords)
-//                .title("Tie Point")
-//                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE))
-//                .draggable(true);
-//        destMarker = mMap.addMarker(options);
-//    }
 
 
 }

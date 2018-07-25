@@ -77,11 +77,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:screenOrientation="landscape" />
-        <activity android:name=".HeadingActivity"></activity>
+            android:screenOrientation="landscape"></activity>
+
+        <activity
+            android:name=".HeadingActivity"
+            android:screenOrientation="landscape"></activity>
+
     </application>
 
 </manifest>
