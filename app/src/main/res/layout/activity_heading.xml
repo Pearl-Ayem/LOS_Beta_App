@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.dji.uxsdkdemo.HeadingActivity">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <EditText
+            android:id="@+id/origin"
+            android:layout_width="175dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="62dp"
+            android:layout_marginLeft="@dimen/offline_map_dp_10_in_sw320dp"
+            android:background="@drawable/white_border"
+            android:hint="Origin Coordinates"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <EditText
+            android:id="@+id/dest"
+            android:layout_width="175dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_marginBottom="62dp"
+            android:layout_marginRight="@dimen/offline_map_dp_10_in_sw320dp"
+            android:background="@drawable/white_border"
+            android:hint="Destination Coordinates"
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="#000"
+            android:textSize="15sp" />
+
+        <TextView
+            android:id="@+id/heading"
+            android:layout_width="300dp"
+            android:layout_height="35dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="22dp"
+            android:background="@drawable/white_border"
+            android:text="Heading: " />
+    </RelativeLayout>
+
+</android.support.constraint.ConstraintLayout>

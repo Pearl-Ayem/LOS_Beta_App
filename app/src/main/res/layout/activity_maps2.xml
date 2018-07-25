@@ -50,43 +50,64 @@
 
     </RelativeLayout>
 
-    <EditText
-        android:id="@+id/origin"
-        android:layout_width="175dp"
-        android:layout_height="35dp"
-        android:hint="Origin Coordinates"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/white_border"
-        android:layout_marginBottom="62dp"
-        android:layout_marginLeft="@dimen/offline_map_dp_10_in_sw320dp"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="#000"
-        android:textSize="15sp" />
+    <!--<EditText-->
+        <!--android:id="@+id/origin"-->
+        <!--android:layout_width="175dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:hint="Origin Coordinates"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:background="@drawable/white_border"-->
+        <!--android:layout_marginBottom="62dp"-->
+        <!--android:layout_marginLeft="@dimen/offline_map_dp_10_in_sw320dp"-->
+        <!--android:inputType="text"-->
+        <!--android:maxLines="1"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="15sp" />-->
 
-    <EditText
-        android:id="@+id/dest"
-        android:layout_width="175dp"
-        android:layout_height="35dp"
-        android:hint="Destination Coordinates"
-        android:layout_alignParentBottom="true"
+    <!--<EditText-->
+        <!--android:id="@+id/dest"-->
+        <!--android:layout_width="175dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:hint="Destination Coordinates"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:background="@drawable/white_border"-->
+        <!--android:layout_marginBottom="62dp"-->
+        <!--android:layout_marginRight="@dimen/offline_map_dp_10_in_sw320dp"-->
+        <!--android:inputType="text"-->
+        <!--android:maxLines="1"-->
+        <!--android:textColor="#000"-->
+        <!--android:textSize="15sp" />-->
+    <!--<TextView-->
+        <!--android:id="@+id/heading"-->
+        <!--android:layout_width="300dp"-->
+        <!--android:layout_height="35dp"-->
+        <!--android:layout_alignParentBottom="true"-->
+        <!--android:layout_centerHorizontal="true"-->
+        <!--android:layout_marginBottom="22dp"-->
+        <!--android:background="@drawable/white_border"-->
+        <!--android:text="Heading: " />-->
+
+    <ImageButton
+        android:id="@+id/heading_launcher"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
-        android:background="@drawable/white_border"
-        android:layout_marginBottom="62dp"
-        android:layout_marginRight="@dimen/offline_map_dp_10_in_sw320dp"
-        android:inputType="text"
-        android:maxLines="1"
-        android:textColor="#000"
-        android:textSize="15sp" />
-    <TextView
-        android:id="@+id/heading"
-        android:layout_width="300dp"
-        android:layout_height="35dp"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="22dp"
-        android:background="@drawable/white_border"
-        android:text="Heading: " />
+        android:background="@string/null_string"
+        app:srcCompat="@drawable/ic_heading_launcher" />
+
+    <!--<ImageButton-->
+        <!--android:id="@+id/mapLayers"-->
+        <!--android:layout_width="30dp"-->
+        <!--android:layout_height="30dp"-->
+        <!--android:layout_alignEnd="@+id/relLayout1"-->
+        <!--android:layout_below="@+id/relLayout1"-->
+        <!--android:layout_marginTop="114dp"-->
+        <!--app:srcCompat="@drawable/ic_map_layers" />-->
+
+    <!-- Layout to contain contents of main body of screen (drawer will slide over this) -->
 
 
 </RelativeLayout>
+
+

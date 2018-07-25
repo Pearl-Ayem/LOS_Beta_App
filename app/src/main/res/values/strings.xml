@@ -1,4 +1,14 @@
 <resources>
     <string name="app_name">UXSDK DJI</string>
     <string name="title_activity_maps">Map</string>
+    <string name="action_settings">Settings</string>
+    <string name="map_type_none"> None</string>
+    <string name="map_type_normal"> Normal</string>
+    <string name="map_type_terrain"> Terrain</string>
+    <string name="map_type_satellite"> Satellite</string>
+    <string name="map_type_hybrid"> Hybrid</string>
+    <string name="title_activity_maps__heading">Maps_Heading</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
 </resources>
