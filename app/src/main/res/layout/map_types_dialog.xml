@@ -1,24 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     tools:context="com.dji.uxsdkdemo.MapsActivity">
 
     <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="100dp"
+        android:layout_width="250dp"
+        android:layout_height="150dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginBottom="100dp"
-        android:layout_marginEnd="49dp"
+        android:layout_marginBottom="50dp"
+        android:layout_marginEnd="25dp"
         android:background="@drawable/white_border"
         android:padding="10dp">
 
         <TextView
             android:id="@+id/heading"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
             android:text="Map Type"
             android:textColor="#000"
             android:textSize="18sp" />
@@ -27,15 +29,16 @@
             android:id="@+id/defaultMapType"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginStart="11dp"
             android:src="@drawable/default_map_icon" />
 
         <ImageButton
             android:id="@+id/satelliteMapType"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
+            android:layout_alignTop="@+id/defaultMapType"
             android:layout_centerHorizontal="true"
             android:src="@drawable/satellite_map" />
 
@@ -43,9 +46,40 @@
             android:id="@+id/terrainMapType"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:layout_alignParentBottom="true"
             android:layout_alignParentEnd="true"
+            android:layout_alignTop="@+id/satelliteMapType"
+            android:layout_marginEnd="12dp"
             android:src="@drawable/terrain_map_icon" />
+
+        <TextView
+            android:id="@+id/defaultMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/defaultMapType"
+            android:layout_below="@+id/defaultMapType"
+            android:layout_marginTop="11dp"
+            android:textSize="12sp"
+            android:text="Default" />
+
+        <TextView
+            android:id="@+id/satelliteMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/satelliteMapType"
+            android:layout_below="@+id/satelliteMapType"
+            android:layout_marginTop="11dp"
+            android:text="Satellite"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/terrainMap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/terrainMapType"
+            android:layout_below="@+id/terrainMapType"
+            android:layout_marginTop="11dp"
+            android:textSize="12sp"
+            android:text="@string/map_type_terrain" />
 
 
     </RelativeLayout>
