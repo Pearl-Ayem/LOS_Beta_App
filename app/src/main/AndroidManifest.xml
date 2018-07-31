@@ -49,8 +49,8 @@
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyAG1RGqCdtN4RS-Q-phUrnEJiNgnVNszkw" />
-
-        <meta-data android:name="com.google.android.gms.version"
+        <meta-data
+            android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
         <activity
@@ -73,14 +73,20 @@
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
         <activity
             android:name=".MapsActivity"
-            android:screenOrientation="landscape"
-            android:label="@string/title_activity_maps"></activity>
+            android:label="@string/title_activity_maps"
+            android:screenOrientation="landscape"></activity>
+
+        <activity
+            android:name=".HeadingActivity"
+            android:screenOrientation="landscape"></activity>
+
     </application>
 
 </manifest>
