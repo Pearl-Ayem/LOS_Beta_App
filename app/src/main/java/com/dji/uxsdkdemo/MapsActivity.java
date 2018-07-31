@@ -42,11 +42,12 @@ import java.util.List;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, Heading.onInputListener {
 
     private static final float DEFAULT_ZOOM = 15f;
-    public GoogleMap mMap;
+    public static GoogleMap mMap;
     private static final String TAG = "MapActivity";
     private FusedLocationProviderClient mFusedLocationProviderClient;
     private EditText mSearchText;
     private ImageButton mLaunchHeading;
+    private ImageButton mChangeMapType;
     public Marker searchMarker;
     public Marker originMarker;
     public Marker destMarker;
@@ -70,6 +71,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setContentView(R.layout.activity_maps2);
         mSearchText =  findViewById(R.id.input_search);
         mLaunchHeading = findViewById(R.id.ic_heading_launcher);
+        mChangeMapType = findViewById(R.id.ic_mapTypes);
 
         Log.d(TAG, "initMap: initializing map");
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
@@ -121,7 +123,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     }
 
-    // test: which repo does this update?
     private void init() {
         Log.d(TAG, "init: initializing");
 
@@ -137,6 +138,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
 
                 return false;
+
             }
         });
 
@@ -146,6 +148,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 Log.d(TAG, "opening heading fragment");
                 Heading headingFragment = new Heading();
                 headingFragment.show(getSupportFragmentManager(), "Heading Dialogue");
+            }
+        });
+
+        mChangeMapType.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d(TAG, "Opening Map Type Fragment");
+
+                MapTypeDialog mapTypeFragment = new MapTypeDialog();
+                mapTypeFragment.show(getSupportFragmentManager(), "MapType Dialog");
             }
         });
 
@@ -279,36 +291,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public LatLng getHeadingDest() {
         return headingDest;
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.menu, menu);
-        return true;
-    }
-
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.mapTypeNone:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-                return true;
-            case R.id.mapTypeNormal:
-                mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
-                return true;
-            case R.id.mapTypeSatellite:
-                mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-                return true;
-            case R.id.mapTypeTerrain:
-                mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
-                return true;
-            case R.id.mapTypeHybrid:
-                mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-
     }
 
 }
