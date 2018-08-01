@@ -21,7 +21,7 @@
             android:textColor="#000"
             android:textSize="18sp" />
 
-        <EditText
+        <AutoCompleteTextView
             android:id="@+id/origin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -33,9 +33,19 @@
             android:textSize="15sp"
             android:imeOptions="actionNext"/>
 
+        <ImageView
+            android:id="@+id/more_options_origin"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/more_options_dest"
+            android:layout_marginStart="11dp"
+            android:layout_toEndOf="@+id/dest"
+            android:padding="5dp"
+            android:src="@drawable/more_options" />
 
 
-        <EditText
+
+        <AutoCompleteTextView
             android:id="@+id/dest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -46,6 +56,15 @@
             android:textColor="#000"
             android:textSize="15sp"
             android:imeOptions="actionDone" />
+
+        <ImageView
+            android:id="@+id/more_options_dest"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/more_options_origin"
+            android:layout_centerVertical="true"
+            android:padding="5dp"
+            android:src="@drawable/more_options" />
 
         <TextView
             android:id="@+id/heading"

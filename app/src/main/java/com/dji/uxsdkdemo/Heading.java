@@ -1,8 +1,13 @@
 package com.dji.uxsdkdemo;
 
+import android.Manifest;
 import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -10,12 +15,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
@@ -31,10 +44,14 @@ public class Heading extends DialogFragment {
     }
 
     public onInputListener mOnInputListener;
+    private FusedLocationProviderClient hFusedLocationProviderClient;
 
-    private EditText mHeadingOrigin;
-    private EditText mHeadingDest;
+
+    private AutoCompleteTextView mHeadingOrigin;
+    private AutoCompleteTextView mHeadingDest;
     private TextView mHeading, mActionOk, mActionCancel;
+    private ImageView moreOrg, moreDest;
+    private static final String[] dropdown = new String[]{"Base Location", "Drone Location"};
 
     private LatLng origin;
     private LatLng tie_point;
@@ -50,6 +67,29 @@ public class Heading extends DialogFragment {
         mHeadingOrigin = view.findViewById(R.id.origin);
         mHeadingDest =  view.findViewById(R.id.dest);
         mHeading = view.findViewById(R.id.heading);
+        moreOrg = view.findViewById(R.id.more_options_origin);
+        moreDest = view.findViewById(R.id.more_options_dest);
+
+        ArrayAdapter<String>adapter = new ArrayAdapter<String>(getContext(),android.R.layout.simple_dropdown_item_1line, dropdown);
+        mHeadingOrigin.setAdapter(adapter);
+
+        ArrayAdapter<String>adapter2 = new ArrayAdapter<String>(getContext(),android.R.layout.simple_dropdown_item_1line, dropdown);
+        mHeadingDest.setAdapter(adapter2);
+
+        moreOrg.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mHeadingOrigin.showDropDown();
+            }
+        });
+
+        moreDest.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mHeadingDest.showDropDown();
+            }
+        });
+
 
 
         if (((MapsActivity) getActivity()).getHeadingOrg()!= null) {
@@ -62,6 +102,7 @@ public class Heading extends DialogFragment {
         if (((MapsActivity) getActivity()).getHeadingDest() !=null) {
             tie_point = ((MapsActivity) getActivity()).getHeadingDest();
             mHeadingDest.setText(makeLatLonStr(tie_point));
+
 
         } else {
             tie_point = null;
@@ -175,4 +216,5 @@ public class Heading extends DialogFragment {
         String out = lat + "," + lon;
         return out;
     }
+
 }
