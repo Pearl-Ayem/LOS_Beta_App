@@ -6,50 +6,6 @@
     android:layout_height="match_parent">
 
 
-    <fragment xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/mapView"
-        android:name="com.google.android.gms.maps.SupportMapFragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        tools:context="com.dji.uxsdkdemo.MapsActivity"/>
-
-    <RelativeLayout
-        android:id="@+id/relLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="100dp"
-        android:layout_gravity="bottom|right">
-
-        <ImageButton
-            android:id="@+id/ic_mapTypes"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentStart="true"
-            android:layout_alignTop="@+id/ic_heading_launcher"
-            android:layout_marginStart="161dp"
-            android:background="@drawable/white_border_translucent"
-            android:elevation="10dp"
-            android:src="@drawable/ic_map_types" />
-
-        <ImageButton
-            android:id="@+id/ic_heading_launcher"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_alignStart="@+id/ic_mapTypes"
-            android:layout_marginBottom="13dp"
-            android:layout_marginStart="50dp"
-            android:background="@drawable/white_border_translucent"
-            android:elevation="10dp"
-            android:onClick="showDialog"
-            android:src="@drawable/launch_heading_radar_26" />
-
-    </RelativeLayout>
-
-
-
     <RelativeLayout
         android:id="@+id/relLayout1"
         android:layout_width="match_parent"
@@ -82,6 +38,47 @@
             android:maxLines="1"
             android:textColor="#000"
             android:textSize="15sp" />
+    </RelativeLayout>
+
+    <fragment
+        android:id="@+id/mapView"
+        android:name="com.google.android.gms.maps.SupportMapFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        tools:context="com.dji.uxsdkdemo.MapsActivity" />
+
+    <RelativeLayout
+        android:id="@+id/relLayout2"
+        android:layout_width="78dp"
+        android:layout_height="224dp"
+        android:layout_gravity="bottom|right">
+
+        <ImageButton
+            android:id="@+id/ic_mapTypes"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentTop="true"
+            android:layout_alignStart="@+id/ic_heading_launcher"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/white_border_translucent"
+            android:elevation="10dp"
+            android:src="@drawable/ic_map_types" />
+
+        <ImageButton
+            android:id="@+id/ic_heading_launcher"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_alignParentEnd="true"
+            android:layout_below="@+id/ic_mapTypes"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="17dp"
+            android:background="@drawable/white_border_translucent"
+            android:elevation="10dp"
+            android:onClick="showDialog"
+            android:src="@drawable/launch_heading_radar_26" />
+
     </RelativeLayout>
 
 </FrameLayout>
