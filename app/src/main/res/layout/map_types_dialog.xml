@@ -17,7 +17,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:text="Map Type"
+            android:text="@string/map_type"
             android:textColor="#000"
             android:textSize="18sp" />
 
@@ -50,7 +50,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@+id/defaultMapType"
-            android:text="Default"
+            android:text="@string/default_map"
             android:textSize="12sp" />
 
         <TextView
@@ -59,7 +59,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/satelliteMapType"
             android:layout_centerHorizontal="true"
-            android:text="Satellite"
+            android:text="@string/satellite"
             android:textSize="12sp" />
 
         <TextView
