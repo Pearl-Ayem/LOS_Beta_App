@@ -35,10 +35,10 @@
 
         <ImageView
             android:id="@+id/more_options_origin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/more_options_dest"
-            android:layout_marginStart="11dp"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_below="@+id/title"
+            android:layout_marginStart="18dp"
             android:layout_toEndOf="@+id/dest"
             android:padding="5dp"
             android:src="@drawable/more_options" />
@@ -59,8 +59,8 @@
 
         <ImageView
             android:id="@+id/more_options_dest"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
             android:layout_alignStart="@+id/more_options_origin"
             android:layout_centerVertical="true"
             android:padding="5dp"
