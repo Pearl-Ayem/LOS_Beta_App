@@ -3,9 +3,11 @@ package com.dji.uxsdkdemo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.ImageButton;
 
 import com.dji.mapkit.maps.DJIMap;
@@ -58,5 +60,13 @@ public class MapTypeDialog extends DialogFragment {
 
 
         return view;
+    }
+
+    public void onResume()
+    {
+        super.onResume();
+        Window window = getDialog().getWindow();
+        window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, 500);
+        window.setGravity(Gravity.CENTER);
     }
 }

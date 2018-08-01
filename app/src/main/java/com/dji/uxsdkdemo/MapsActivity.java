@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -292,5 +293,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng getHeadingDest() {
         return headingDest;
     }
+
 
 }
