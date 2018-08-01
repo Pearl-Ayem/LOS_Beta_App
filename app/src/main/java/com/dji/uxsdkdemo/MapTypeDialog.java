@@ -66,7 +66,7 @@ public class MapTypeDialog extends DialogFragment {
     {
         super.onResume();
         Window window = getDialog().getWindow();
-        window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, 500);
+        window.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, 600);
         window.setGravity(Gravity.CENTER);
     }
 }
