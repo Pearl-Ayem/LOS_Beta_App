@@ -73,15 +73,49 @@ public class Heading extends DialogFragment implements TextWatcher {
     public void afterTextChanged(Editable editable) {
         try {
             String input = editable.toString();
-            if (input.equals(BASE_LOCATION)) {
-                useCurrentLocationForHeading();
-                editable.replace(0, editable.length(), makeLatLonStr(curLatLon));
-                updateHeading();
+            if (input.equals(mHeadingOrigin.getText().toString())) {
+
+                if (input.equals(BASE_LOCATION)) {
+                    useCurrentLocationForHeading();
+                    editable.replace(0, editable.length(), makeLatLonStr(curLatLon));
+                    origin = curLatLon;
+                    updateHeading();
+                }
+
+                else if (input.equals(DRONE_LOCATION)) {
+                    Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                }
+
+                else{
+                    origin = convertoLatLon(input);
+                    updateHeading();
+                }
+
             }
 
-            if (input.equals(DRONE_LOCATION)) {
-                Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+
+            if (input.equals(mHeadingDest.getText().toString())) {
+
+                if (input.equals(BASE_LOCATION)) {
+                    useCurrentLocationForHeading();
+                    editable.replace(0, editable.length(), makeLatLonStr(curLatLon));
+                    tie_point = curLatLon;
+                    updateHeading();
+                }
+
+                else if (input.equals(DRONE_LOCATION)) {
+                    Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                }
+
+                else{
+                    tie_point = convertoLatLon(input);
+                    updateHeading();
+                }
+
             }
+
+
+
         } catch (NullPointerException e) {//do nothing}
 
         }
