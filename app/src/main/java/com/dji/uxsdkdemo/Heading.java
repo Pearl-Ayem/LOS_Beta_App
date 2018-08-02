@@ -84,6 +84,7 @@ public class Heading extends DialogFragment implements TextWatcher {
 
                 else if (input.equals(DRONE_LOCATION)) {
                     Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                    mHeading.setText("");
                 }
 
                 else{
@@ -105,6 +106,7 @@ public class Heading extends DialogFragment implements TextWatcher {
 
                 else if (input.equals(DRONE_LOCATION)) {
                     Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                    mHeading.setText("");
                 }
 
                 else{
@@ -148,7 +150,6 @@ public class Heading extends DialogFragment implements TextWatcher {
                 mHeadingOrigin.showDropDown();
             }
         });
-
         moreDest.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -156,8 +157,6 @@ public class Heading extends DialogFragment implements TextWatcher {
             }
         });
 
-        mHeadingOrigin.addTextChangedListener(this);
-        mHeadingDest.addTextChangedListener(this);
 
 
         if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
@@ -231,6 +230,9 @@ public class Heading extends DialogFragment implements TextWatcher {
                 getDialog().dismiss();
             }
         });
+
+        mHeadingOrigin.addTextChangedListener(this);
+        mHeadingDest.addTextChangedListener(this);
 
         return view;
 
