@@ -28,6 +28,11 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import dji.common.flightcontroller.FlightControllerState;
+import dji.sdk.flightcontroller.FlightController;
+import dji.sdk.products.Aircraft;
+import dji.sdk.sdkmanager.DJISDKManager;
+
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
 /**
@@ -54,11 +59,13 @@ public class Heading extends DialogFragment {
     private LatLng origin;
     private LatLng tie_point;
     private LatLng curLatLon;
+    private LatLng droneLatLon;
     private Double headingCalc;
+    private double droneLocationLat = 181, droneLocationLng = 181;
+    private FlightController mFlightController = null;
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
-
 
 
     @Nullable
@@ -100,16 +107,19 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
-                            mHeadingOrigin.setText(makeLatLonStr(curLatLon));
                             origin = curLatLon;
+                            mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
 
                             break;
                         case 1:
                             // Whatever you want to happen when the second item gets selected
-                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
-                            mHeading.setText("");
-                            mHeadingOrigin.setText("");
+                            updateDroneLatLon();
+                            origin = droneLatLon;
+                            mHeadingOrigin.setText(makeLatLonStr(origin));
+                            updateHeading();
+                            Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(droneLatLon), Toast.LENGTH_SHORT).show();
+
                             break;
                     }
 
@@ -145,7 +155,7 @@ public class Heading extends DialogFragment {
                             break;
                         case 1:
                             // Whatever you want to happen when the second item gets selected
-                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+//                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
                             mHeading.setText("");
                             break;
                     }
@@ -206,7 +216,6 @@ public class Heading extends DialogFragment {
                 getDialog().dismiss();
             }
         });
-
 
 
         return view;
@@ -292,6 +301,33 @@ public class Heading extends DialogFragment {
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
+
+    }
+
+    private boolean isFlightControllerSupported() {
+        boolean supported1 = DJISDKManager.getInstance().getProduct() != null;
+        boolean supported2 = DJISDKManager.getInstance().getProduct() instanceof Aircraft;
+        boolean supported3 = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController() != null;
+        return supported1 && supported2 && supported3;
+    }
+
+    private void updateDroneLatLon() {
+        if (isFlightControllerSupported()) {
+            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+            mFlightController.setStateCallback(new FlightControllerState.Callback() {
+                @Override
+                public void onUpdate(FlightControllerState
+                                             djiFlightControllerCurrentState) {
+                    droneLocationLat = djiFlightControllerCurrentState.getAircraftLocation().getLatitude();
+                    droneLocationLng = djiFlightControllerCurrentState.getAircraftLocation().getLongitude();
+                    LatLng droneloc = new LatLng(droneLocationLat, droneLocationLng);
+                    droneLatLon = droneloc;
+                }
+            });
+        } else {
+            Toast.makeText(getContext(), "FlightControllerNotSupported", Toast.LENGTH_SHORT).show();
+        }
+
 
     }
 

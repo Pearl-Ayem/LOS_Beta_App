@@ -19,6 +19,7 @@ import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
+import dji.sdk.gimbal.Gimbal;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class DemoApplication extends Application {
