@@ -17,12 +17,9 @@ import android.widget.Toast;
 
 import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
-import dji.common.useraccount.UserAccountState;
-import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.sdkmanager.DJISDKManager;
-import dji.sdk.useraccount.UserAccountManager;
 
 public class DemoApplication extends Application {
 
@@ -153,21 +150,6 @@ public class DemoApplication extends Application {
 
     }
 
-//    private void loginAccount() {
-//
-//        UserAccountManager.getInstance().logIntoDJIUserAccount(this,
-//                new CommonCallbacks.CompletionCallbackWith<UserAccountState>() {
-//                    @Override
-//                    public void onSuccess(final UserAccountState userAccountState) {
-//                        Log.e("TAG", "Login Success");
-//                    }
-//
-//                    @Override
-//                    public void onFailure(DJIError error) {
-//                        Log.e("TAG", "Login Error:" + error.getDescription());
-//                    }
-//                });
-//    }
 
     private void notifyStatusChange() {
         mHandler.removeCallbacks(updateRunnable);
@@ -182,5 +164,9 @@ public class DemoApplication extends Application {
             getApplicationContext().sendBroadcast(intent);
         }
     };
+
+
+
+
 
 }
