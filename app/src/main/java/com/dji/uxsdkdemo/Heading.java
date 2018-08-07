@@ -21,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,7 +37,7 @@ import static com.google.maps.android.SphericalUtil.computeHeading;
  * Created by Pearl on 2018-07-26.
  */
 
-public class Heading extends DialogFragment implements TextWatcher {
+public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
     public interface onInputListener {
@@ -50,7 +51,8 @@ public class Heading extends DialogFragment implements TextWatcher {
     private AutoCompleteTextView mHeadingOrigin;
     private AutoCompleteTextView mHeadingDest;
     private TextView mHeading, mActionOk, mActionCancel;
-    private ImageView moreOrg, moreDest;
+    Spinner originSpinner, destSpinner;
+
 
     private LatLng origin;
     private LatLng tie_point;
@@ -60,69 +62,6 @@ public class Heading extends DialogFragment implements TextWatcher {
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
 
-    @Override
-    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        //do nothing
-    }
-
-    @Override
-    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        //do nothing
-    }
-
-    @Override
-    public void afterTextChanged(Editable editable) {
-        try {
-            String input = editable.toString();
-            if (input.equals(mHeadingOrigin.getText().toString())) {
-
-                if (input.equals(BASE_LOCATION)) {
-                    useCurrentLocationForHeading();
-                    editable.replace(0, editable.length(), makeLatLonStr(curLatLon));
-                    origin = curLatLon;
-                    updateHeading();
-                }
-
-                else if (input.equals(DRONE_LOCATION)) {
-                    Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
-                    mHeading.setText("");
-                }
-
-                else{
-                    origin = convertoLatLon(input);
-                    updateHeading();
-                }
-
-            }
-
-
-            if (input.equals(mHeadingDest.getText().toString())) {
-
-                if (input.equals(BASE_LOCATION)) {
-                    useCurrentLocationForHeading();
-                    editable.replace(0, editable.length(), makeLatLonStr(curLatLon));
-                    tie_point = curLatLon;
-                    updateHeading();
-                }
-
-                else if (input.equals(DRONE_LOCATION)) {
-                    Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
-                    mHeading.setText("");
-                }
-
-                else{
-                    tie_point = convertoLatLon(input);
-                    updateHeading();
-                }
-
-            }
-
-
-
-        } catch (NullPointerException e) {//do nothing}
-
-        }
-    }
 
 
     @Nullable
@@ -136,52 +75,95 @@ public class Heading extends DialogFragment implements TextWatcher {
         mHeadingOrigin = view.findViewById(R.id.origin);
         mHeadingDest = view.findViewById(R.id.dest);
         mHeading = view.findViewById(R.id.heading);
-        moreOrg = view.findViewById(R.id.more_options_origin);
-        moreDest = view.findViewById(R.id.more_options_dest);
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, dropdown);
-        mHeadingOrigin.setAdapter(adapter);
-
-
-
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, dropdown);
-        mHeadingDest.setAdapter(adapter2);
-
-        moreOrg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHeadingOrigin.showDropDown();
-            }
-        });
-        moreDest.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mHeadingDest.showDropDown();
-            }
-        });
-
-
+        originSpinner = view.findViewById(R.id.more_options_origin);
+        destSpinner = view.findViewById(R.id.more_options_dest);
 
         if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
             origin = ((MapsActivity) getActivity()).getHeadingOrg();
             mHeadingOrigin.setText(makeLatLonStr(origin));
-        } else {
-            origin = null;
         }
 
         if (((MapsActivity) getActivity()).getHeadingDest() != null) {
             tie_point = ((MapsActivity) getActivity()).getHeadingDest();
             mHeadingDest.setText(makeLatLonStr(tie_point));
-
-
-        } else {
-            tie_point = null;
         }
 
         updateHeading();
 
-//        headingCalc = null;
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        originSpinner.setAdapter(adapter);
+        originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
 
+                try {
+                    switch (position) {
+                        case 0:
+                            // Whatever you want to happen when the first item gets selected
+
+                            useCurrentLocationForHeading();
+                            mHeadingOrigin.setText(makeLatLonStr(curLatLon));
+                            origin = curLatLon;
+                            updateHeading();
+
+                            break;
+                        case 1:
+                            // Whatever you want to happen when the second item gets selected
+                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                            mHeading.setText("");
+                            break;
+                    }
+
+
+                } catch (NullPointerException e) {
+
+                    //do nothing
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        destSpinner.setAdapter(adapter2);
+        destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
+                try {
+                    switch (position) {
+                        case 0:
+                            // Whatever you want to happen when the first item gets selected
+
+                            useCurrentLocationForHeading();
+                            mHeadingDest.setText(makeLatLonStr(curLatLon));
+                            tie_point = curLatLon;
+                            updateHeading();
+
+                            break;
+                        case 1:
+                            // Whatever you want to happen when the second item gets selected
+                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
+                            mHeading.setText("");
+                            break;
+                    }
+
+
+                } catch (NullPointerException e) {
+
+                    //do nothing
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
 
         mHeadingOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
@@ -190,10 +172,8 @@ public class Heading extends DialogFragment implements TextWatcher {
                         || i == EditorInfo.IME_ACTION_NEXT
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
                     origin = convertoLatLon(textView.getText().toString());
-//                    updateHeading();
                     return true;
                 }
-
                 return false;
             }
         });
@@ -208,8 +188,6 @@ public class Heading extends DialogFragment implements TextWatcher {
                     updateHeading();
                     return true;
                 }
-
-
                 return false;
             }
         });
@@ -222,23 +200,18 @@ public class Heading extends DialogFragment implements TextWatcher {
             }
         });
 
-
         mActionOk.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-//                setMarkers();
-//                updateHeading();
                 mOnInputListener.sendInput(origin, tie_point, headingCalc);
                 getDialog().dismiss();
             }
         });
 
-        mHeadingOrigin.addTextChangedListener(this);
-        mHeadingDest.addTextChangedListener(this);
+
 
         return view;
-
     }
 
     private void updateHeading() {

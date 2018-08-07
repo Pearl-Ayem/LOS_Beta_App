@@ -20,6 +20,7 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -42,6 +43,7 @@ import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, Heading.onInputListener {
 
+
     private static final float DEFAULT_ZOOM = 15f;
     public static GoogleMap mMap;
     private static final String TAG = "MapActivity";
@@ -56,6 +58,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng headingOrg;
     public LatLng headingDest;
     public Double headingCalc;
+
+
 
     @Override
     public void sendInput(LatLng o, LatLng d, Double h) {
@@ -278,7 +282,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
             MarkerOptions destMarkerOptions = new MarkerOptions().position(headingDest).title("Tie-Point").draggable(true);
-//                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN));
             destMarker = mMap.addMarker(destMarkerOptions);
         } else {
             //do nothing

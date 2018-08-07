@@ -36,7 +36,7 @@
             android:textColor="#000"
             android:textSize="15sp" />
 
-        <ImageView
+        <Spinner
             android:id="@+id/more_options_origin"
             android:layout_width="30dp"
             android:layout_height="30dp"
@@ -60,7 +60,7 @@
             android:textColor="#000"
             android:textSize="15sp" />
 
-        <ImageView
+        <Spinner
             android:id="@+id/more_options_dest"
             android:layout_width="30dp"
             android:layout_height="30dp"
