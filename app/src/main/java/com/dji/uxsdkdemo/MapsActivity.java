@@ -107,7 +107,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng UAV = new LatLng(49.238074, -122.853361);
         MarkerOptions options = new MarkerOptions()
                 .position(UAV).title("UAViation Aerial Solutions")
-                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin3));
+                .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin1));
         searchMarker = mMap.addMarker(options);
         mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
 

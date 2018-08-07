@@ -17,6 +17,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
@@ -140,6 +141,8 @@ public class Heading extends DialogFragment implements TextWatcher {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, dropdown);
         mHeadingOrigin.setAdapter(adapter);
+
+
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_dropdown_item_1line, dropdown);
         mHeadingDest.setAdapter(adapter2);
@@ -318,7 +321,6 @@ public class Heading extends DialogFragment implements TextWatcher {
         } catch (SecurityException e) {
             Log.e(TAG, "getDeviceLocation: SecurityException: " + e.getMessage());
         }
-
 
     }
 
