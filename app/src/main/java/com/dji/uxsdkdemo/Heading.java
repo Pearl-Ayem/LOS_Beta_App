@@ -9,8 +9,6 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
@@ -20,7 +18,6 @@ import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,6 +109,7 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the second item gets selected
                             Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
                             mHeading.setText("");
+                            mHeadingOrigin.setText("");
                             break;
                     }
 
