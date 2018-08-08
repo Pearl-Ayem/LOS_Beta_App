@@ -389,7 +389,7 @@ public class Heading extends DialogFragment {
 
 
             boolean virtualStickModeAvailable = mFlightController.isVirtualStickControlModeAvailable();
-            Toast.makeText(getContext(), "isVirtualStickControlModeAvailable : " + virtualStickModeAvailable, Toast.LENGTH_LONG).show();
+//            Toast.makeText(getContext(), "isVirtualStickControlModeAvailable : " + virtualStickModeAvailable, Toast.LENGTH_LONG).show();
 
 //            YawControlMode currentYawControlMode = mFlightController.getYawControlMode();
 //            Toast.makeText(getContext(), "Current Yaw Control Mode: " + currentYawControlMode, Toast.LENGTH_LONG).show();
@@ -400,32 +400,32 @@ public class Heading extends DialogFragment {
             FlightControlData mflightControlData = new FlightControlData(pitch, roll, yaw, throttle);
             float p = mflightControlData.getPitch();
             Toast.makeText(getContext(), "Pitch: " + p, Toast.LENGTH_SHORT).show();
-//            mflightControlData.setPitch(0);
+            mflightControlData.setPitch(0);
 
 
             float r = mflightControlData.getRoll();
             Toast.makeText(getContext(), "Roll: " + r, Toast.LENGTH_SHORT).show();
-//            mflightControlData.setRoll(0);
+            mflightControlData.setRoll(0);
 
 
             float y = mflightControlData.getYaw();
             Toast.makeText(getContext(), "Yaw: " + y, Toast.LENGTH_SHORT).show();
-            float  d = ((Double)headingCalc).floatValue();
+            float  d = (headingCalc).floatValue();
             yaw = d;
-//            mflightControlData.setYaw(d);
-//            Toast.makeText(getContext(), "New Yaw: " + y, Toast.LENGTH_SHORT).show();
+            mflightControlData.setYaw(d);
+            Toast.makeText(getContext(), "New Yaw: " + y, Toast.LENGTH_SHORT).show();
 
 
             float tt  = mflightControlData.getVerticalThrottle();
             Toast.makeText(getContext(), "VerticalThrottle: " + tt, Toast.LENGTH_SHORT).show();
-//            mflightControlData.setVerticalThrottle(0);
+            mflightControlData.setVerticalThrottle(0);
 
-//            mFlightController.sendVirtualStickFlightControlData(new FlightControlData(pitch, roll, yaw, throttle), new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//
-//                }
-//            });
+            mFlightController.sendVirtualStickFlightControlData(new FlightControlData(pitch, roll, yaw, throttle), new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+
+                }
+            });
 
             Toast.makeText(getContext(), "Current Yaw: "+ yaw, Toast.LENGTH_LONG).show();
 
