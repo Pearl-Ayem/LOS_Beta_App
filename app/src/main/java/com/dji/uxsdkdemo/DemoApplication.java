@@ -19,7 +19,6 @@ import dji.common.error.DJIError;
 import dji.common.error.DJISDKError;
 import dji.sdk.base.BaseComponent;
 import dji.sdk.base.BaseProduct;
-import dji.sdk.gimbal.Gimbal;
 import dji.sdk.sdkmanager.DJISDKManager;
 
 public class DemoApplication extends Application {
@@ -27,6 +26,7 @@ public class DemoApplication extends Application {
     public static final String FLAG_CONNECTION_CHANGE = "uxsdk_demo_connection_change";
 
     private static BaseProduct mProduct;
+    private static Application app;
     private Handler mHandler;
     private DJISDKManager.SDKManagerCallback mDJISDKManagerCallback;
     private BaseProduct.BaseProductListener mDJIBaseProductListener;
@@ -166,6 +166,9 @@ public class DemoApplication extends Application {
         }
     };
 
+    public static Application getInstance() {
+        return DemoApplication.app;
+    }
 
 
 

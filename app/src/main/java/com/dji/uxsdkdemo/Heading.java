@@ -28,7 +28,13 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
+import dji.common.flightcontroller.FlightOrientationMode;
+import dji.common.flightcontroller.virtualstick.FlightControlData;
+import dji.common.flightcontroller.virtualstick.RollPitchControlMode;
+import dji.common.flightcontroller.virtualstick.YawControlMode;
+import dji.common.util.CommonCallbacks;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
@@ -66,6 +72,10 @@ public class Heading extends DialogFragment {
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
+    private float pitch = 0;
+    private float roll = 0;
+    private float yaw;
+    private float throttle = 0;
 
 
     @Nullable
@@ -114,11 +124,13 @@ public class Heading extends DialogFragment {
                             break;
                         case 1:
                             // Whatever you want to happen when the second item gets selected
+                            mHeadingOrigin.setText("");
                             updateDroneLatLon();
                             origin = droneLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
-                            Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(droneLatLon), Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
+                            pointDroneToHeading();
 
                             break;
                     }
@@ -155,8 +167,12 @@ public class Heading extends DialogFragment {
                             break;
                         case 1:
                             // Whatever you want to happen when the second item gets selected
-//                            Toast.makeText(getContext(), "Drone Location Selected", Toast.LENGTH_SHORT).show();
-                            mHeading.setText("");
+                            mHeadingDest.setText("");
+                            updateDroneLatLon();
+                            tie_point = droneLatLon;
+                            mHeadingDest.setText(makeLatLonStr(tie_point));
+                            updateHeading();
+                            Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
                             break;
                     }
 
@@ -216,6 +232,11 @@ public class Heading extends DialogFragment {
                 getDialog().dismiss();
             }
         });
+
+
+        if (isFlightControllerSupported()) {
+            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+        }
 
 
         return view;
@@ -305,15 +326,20 @@ public class Heading extends DialogFragment {
     }
 
     private boolean isFlightControllerSupported() {
-        boolean supported1 = DJISDKManager.getInstance().getProduct() != null;
-        boolean supported2 = DJISDKManager.getInstance().getProduct() instanceof Aircraft;
-        boolean supported3 = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController() != null;
-        return supported1 && supported2 && supported3;
+        try {
+            boolean supported1 = DJISDKManager.getInstance().getProduct() != null;
+            boolean supported2 = DJISDKManager.getInstance().getProduct() instanceof Aircraft;
+            boolean supported3 = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController() != null;
+            return supported1 && supported2 && supported3;
+        } catch (NullPointerException e) {
+            return false;
+            //do nothing
+        }
     }
 
     private void updateDroneLatLon() {
         if (isFlightControllerSupported()) {
-            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+//            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
             mFlightController.setStateCallback(new FlightControllerState.Callback() {
                 @Override
                 public void onUpdate(FlightControllerState
@@ -327,8 +353,85 @@ public class Heading extends DialogFragment {
         } else {
             Toast.makeText(getContext(), "FlightControllerNotSupported", Toast.LENGTH_SHORT).show();
         }
+    }
 
+    private void pointDroneToHeading() {
+        if (isFlightControllerSupported()) {
+
+
+            mFlightController.setVirtualStickModeEnabled(true, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+
+                }
+            });
+
+            mFlightController.setFlightOrientationMode(FlightOrientationMode.AIRCRAFT_HEADING, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+
+                }
+            });
+
+            mFlightController.setTerrainFollowModeEnabled(false, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+
+                }
+            });
+
+            mFlightController.setTripodModeEnabled(false, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+
+                }
+            });
+
+
+            boolean virtualStickModeAvailable = mFlightController.isVirtualStickControlModeAvailable();
+            Toast.makeText(getContext(), "isVirtualStickControlModeAvailable : " + virtualStickModeAvailable, Toast.LENGTH_LONG).show();
+
+//            YawControlMode currentYawControlMode = mFlightController.getYawControlMode();
+//            Toast.makeText(getContext(), "Current Yaw Control Mode: " + currentYawControlMode, Toast.LENGTH_LONG).show();
+
+            mFlightController.setYawControlMode(YawControlMode.ANGLE);
+            mFlightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
+
+            FlightControlData mflightControlData = new FlightControlData(pitch, roll, yaw, throttle);
+            float p = mflightControlData.getPitch();
+            Toast.makeText(getContext(), "Pitch: " + p, Toast.LENGTH_SHORT).show();
+//            mflightControlData.setPitch(0);
+
+
+            float r = mflightControlData.getRoll();
+            Toast.makeText(getContext(), "Roll: " + r, Toast.LENGTH_SHORT).show();
+//            mflightControlData.setRoll(0);
+
+
+            float y = mflightControlData.getYaw();
+            Toast.makeText(getContext(), "Yaw: " + y, Toast.LENGTH_SHORT).show();
+            float  d = ((Double)headingCalc).floatValue();
+            yaw = d;
+//            mflightControlData.setYaw(d);
+//            Toast.makeText(getContext(), "New Yaw: " + y, Toast.LENGTH_SHORT).show();
+
+
+            float tt  = mflightControlData.getVerticalThrottle();
+            Toast.makeText(getContext(), "VerticalThrottle: " + tt, Toast.LENGTH_SHORT).show();
+//            mflightControlData.setVerticalThrottle(0);
+
+//            mFlightController.sendVirtualStickFlightControlData(new FlightControlData(pitch, roll, yaw, throttle), new CommonCallbacks.CompletionCallback() {
+//                @Override
+//                public void onResult(DJIError djiError) {
+//
+//                }
+//            });
+
+            Toast.makeText(getContext(), "Current Yaw: "+ yaw, Toast.LENGTH_LONG).show();
+
+        }
 
     }
+
 
 }
