@@ -34,6 +34,7 @@ import dji.common.flightcontroller.FlightOrientationMode;
 import dji.common.flightcontroller.virtualstick.FlightControlData;
 import dji.common.flightcontroller.virtualstick.RollPitchControlMode;
 import dji.common.flightcontroller.virtualstick.YawControlMode;
+import dji.common.gimbal.Attitude;
 import dji.common.gimbal.Rotation;
 import dji.common.util.CommonCallbacks;
 import dji.sdk.flightcontroller.FlightController;
@@ -422,11 +423,17 @@ public class Heading extends DialogFragment {
             throttle = mflightControlData.getVerticalThrottle();
             Toast.makeText(getContext(), "VerticalThrottle: " + throttle, Toast.LENGTH_SHORT).show();
 
-
             mFlightController.sendVirtualStickFlightControlData(mflightControlData, new CommonCallbacks.CompletionCallback() {
                 @Override
                 public void onResult(DJIError djiError) {
 
+                }
+            });
+
+            mFlightController.setStateCallback(new FlightControllerState.Callback() {
+                @Override
+                public void onUpdate(@NonNull FlightControllerState flightControllerState) {
+                    //TODO Add the stuff to getAttitude here
                 }
             });
         }
