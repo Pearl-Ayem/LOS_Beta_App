@@ -28,6 +28,9 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.flightcontroller.FlightOrientationMode;
@@ -43,6 +46,7 @@ import dji.sdk.gimbal.Gimbal;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
 
+import static com.dji.uxsdkdemo.ToastUtils.showToast;
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
 /**
@@ -73,6 +77,7 @@ public class Heading extends DialogFragment {
     private Double headingCalc;
     private double droneLocationLat = 181, droneLocationLng = 181;
     private FlightController mFlightController = null;
+    private FlightControlData mflightControlData = null;
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
@@ -240,6 +245,7 @@ public class Heading extends DialogFragment {
 
         if (isFlightControllerSupported()) {
             mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+             mflightControlData = new FlightControlData(pitch, roll, yaw, throttle);
         }
 
 
@@ -401,7 +407,6 @@ public class Heading extends DialogFragment {
             mFlightController.setYawControlMode(YawControlMode.ANGLE);
             mFlightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
 
-            FlightControlData mflightControlData = new FlightControlData(pitch, roll, yaw, throttle);
 
             mflightControlData.setPitch(0);
             pitch = mflightControlData.getPitch();
@@ -412,6 +417,10 @@ public class Heading extends DialogFragment {
             roll = mflightControlData.getRoll();
             Toast.makeText(getContext(), "Roll: " + roll, Toast.LENGTH_SHORT).show();
 
+            mflightControlData.setVerticalThrottle(0);
+            throttle = mflightControlData.getVerticalThrottle();
+            Toast.makeText(getContext(), "VerticalThrottle: " + throttle, Toast.LENGTH_SHORT).show();
+
 
             Toast.makeText(getContext(), "Old Yaw: " + mflightControlData.getYaw(), Toast.LENGTH_SHORT).show();
             float y = (headingCalc).floatValue();
@@ -419,26 +428,39 @@ public class Heading extends DialogFragment {
             yaw = mflightControlData.getYaw();
             Toast.makeText(getContext(), "New Yaw: " + yaw, Toast.LENGTH_SHORT).show();
 
-            mflightControlData.setVerticalThrottle(0);
-            throttle = mflightControlData.getVerticalThrottle();
-            Toast.makeText(getContext(), "VerticalThrottle: " + throttle, Toast.LENGTH_SHORT).show();
-
+            Toast.makeText(getContext(),"Use this yaw: " + mflightControlData.getYaw(), Toast.LENGTH_SHORT).show();
             mFlightController.sendVirtualStickFlightControlData(mflightControlData, new CommonCallbacks.CompletionCallback() {
                 @Override
-                public void onResult(DJIError djiError) {
-
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        Toast.makeText(getContext(),"Rotation: success", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showToast(error.getDescription());
+                    }
                 }
             });
 
-            mFlightController.setStateCallback(new FlightControllerState.Callback() {
-                @Override
-                public void onUpdate(@NonNull FlightControllerState flightControllerState) {
-                    //TODO Add the stuff to getAttitude here
-                }
-            });
+
+//            Timer timer = new Timer();
+//            Toast.makeText(getContext(),"Timer initiated: ", Toast.LENGTH_SHORT).show();
+//
+//            timer.schedule(new TimerTask() {
+//                @Override
+//                public void run() {
+//                    Toast.makeText(getContext(),"Use this yaw: " + yaw, Toast.LENGTH_SHORT).show();
+//                    mFlightController.sendVirtualStickFlightControlData(mflightControlData, new CommonCallbacks.CompletionCallback() {
+//                        @Override
+//                        public void onResult(DJIError error) {
+//                            if (error == null) {
+//                                Toast.makeText(getContext(),"Rotation: success", Toast.LENGTH_SHORT).show();
+//                            } else {
+//                                showToast(error.getDescription());
+//                            }
+//                        }
+//                    });
+//                }
+//            }, 0,100);
         }
-
     }
-
 
 }
