@@ -38,8 +38,11 @@ import dji.common.flightcontroller.virtualstick.FlightControlData;
 import dji.common.flightcontroller.virtualstick.RollPitchControlMode;
 import dji.common.flightcontroller.virtualstick.YawControlMode;
 import dji.common.gimbal.Attitude;
+import dji.common.gimbal.GimbalMode;
 import dji.common.gimbal.Rotation;
+import dji.common.gimbal.RotationMode;
 import dji.common.util.CommonCallbacks;
+import dji.sdk.base.BaseProduct;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.gimbal.Gimbal;
 
@@ -69,7 +72,6 @@ public class Heading extends DialogFragment {
     private TextView mHeading, mActionOk, mActionCancel;
     Spinner originSpinner, destSpinner;
     private Gimbal gimbal = null;
-
 
 
     private LatLng origin;
@@ -250,10 +252,12 @@ public class Heading extends DialogFragment {
             }
         });
 
+        if (getGimbalInstance() != null) {
+            gimbal = getGimbalInstance();
+        }
 
         return view;
     }
-
 
 
     private void updateHeading() {
@@ -451,6 +455,71 @@ public class Heading extends DialogFragment {
     }
 
     private void pointGimbalToHeading() {
+        Toast.makeText(getContext(), "In Method pointGimbalToHeading", Toast.LENGTH_SHORT).show();
+
+        if (gimbal != null) {
+            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        Toast.makeText(getContext(), "Gimbal Mode set to Yaw Mode", Toast.LENGTH_SHORT).show();
+                    } else {
+                        showToast(error.getDescription());
+                    }
+                }
+            });
+        }
+
+        Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
+        builder.roll(0);
+        builder.pitch(0);
+        float y = (headingCalc).floatValue();
+        builder.yaw(y);
+        sendRotateGimbalCommand(builder.build());
+
     }
 
+
+    private void sendRotateGimbalCommand(Rotation rotation) {
+        Toast.makeText(getContext(), "In method sendRotateGimbalCommand ", Toast.LENGTH_SHORT).show();
+        if (gimbal == null) {
+            return;
+        }
+
+        gimbal.rotate(rotation, new CommonCallbacks.CompletionCallback() {
+            @Override
+            public void onResult(DJIError djiError) {
+                Toast.makeText(getContext(), "Gimbal rotates to: ", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private Gimbal getGimbalInstance() {
+        if (gimbal == null) {
+            initGimbal();
+        }
+        return gimbal;
+    }
+
+//    private void initGimbal() {
+//        if (DJISDKManager.getInstance() != null) {
+//            BaseProduct product = DJISDKManager.getInstance().getProduct();
+//            if (product != null) {
+//                if (product instanceof Aircraft) {
+//                    gimbal = ((Aircraft) product).getGimbals().get(currentGimbalId);
+//                } else {
+//                    gimbal = product.getGimbal();
+//                }
+//            }
+//        }
+//    }
+
+    private void initGimbal() {
+        if (DJISDKManager.getInstance() != null) {
+            BaseProduct product = DJISDKManager.getInstance().getProduct();
+            if (product != null) {
+                    gimbal = ((Aircraft) product).getGimbal();
+                }
+        }
+    }
 }
