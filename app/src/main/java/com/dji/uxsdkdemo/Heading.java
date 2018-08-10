@@ -60,7 +60,7 @@ public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
     public interface onInputListener {
-        void sendInput(LatLng o, LatLng d, Double h);
+        void sendInput(LatLng o, LatLng d, Double h, float gp, float gr, float gy);
     }
 
     public onInputListener mOnInputListener;
@@ -84,10 +84,9 @@ public class Heading extends DialogFragment {
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
-//    private float pitch;
-//    private float roll;
-//    private float yaw;
-//    private float throttle;
+    private float gPitch;
+    private float gRoll;
+    private float gYaw;
 
 
     @Nullable
@@ -115,11 +114,21 @@ public class Heading extends DialogFragment {
             mHeadingDest.setText(makeLatLonStr(tie_point));
         }
 
+        gYaw = ((MapsActivity) getActivity()).getGimYaw();
+        gPitch = ((MapsActivity) getActivity()).getGimPitch();
+        gRoll = ((MapsActivity) getActivity()).getGimRoll();
+
+
         if (isFlightControllerSupported()) {
             mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
         }
 
+
+        if (getGimbalInstance() != null) {
+            gimbal = getGimbalInstance();
+        }
         updateHeading();
+        pointGimbalToHeading();
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         originSpinner.setAdapter(adapter);
@@ -247,14 +256,11 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-                mOnInputListener.sendInput(origin, tie_point, headingCalc);
+                mOnInputListener.sendInput(origin, tie_point, headingCalc, gPitch, gRoll, gYaw);
                 getDialog().dismiss();
             }
         });
 
-        if (getGimbalInstance() != null) {
-            gimbal = getGimbalInstance();
-        }
 
         return view;
     }
@@ -455,27 +461,34 @@ public class Heading extends DialogFragment {
     }
 
     private void pointGimbalToHeading() {
-        Toast.makeText(getContext(), "In Method pointGimbalToHeading", Toast.LENGTH_SHORT).show();
+        try {
+//            Toast.makeText(getContext(), "In Method pointGimbalToHeading", Toast.LENGTH_SHORT).show();
 
-        if (gimbal != null) {
-            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
-                @Override
-                public void onResult(DJIError error) {
-                    if (error == null) {
-                        Toast.makeText(getContext(), "Gimbal Mode set to Yaw Mode", Toast.LENGTH_SHORT).show();
-                    } else {
-                        showToast(error.getDescription());
+            if (gimbal != null) {
+                gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+                    @Override
+                    public void onResult(DJIError error) {
+                        if (error == null) {
+                            Toast.makeText(getContext(), "Gimbal Mode set to Yaw Mode", Toast.LENGTH_SHORT).show();
+                        } else {
+                            showToast(error.getDescription());
+                        }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
-        builder.roll(0);
-        builder.pitch(0);
-        float y = (headingCalc).floatValue();
-        builder.yaw(y);
-        sendRotateGimbalCommand(builder.build());
+            Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
+            builder.roll(0);
+            gRoll = builder.build().getRoll();
+            builder.pitch(0);
+            gPitch = builder.build().getPitch();
+            float y = (headingCalc).floatValue();
+            builder.yaw(y);
+            gYaw = builder.build().getYaw();
+            sendRotateGimbalCommand(builder.build());
+        } catch (NullPointerException e) {
+            Toast.makeText(getContext(), "Null Pointer Found in pointGimbalToHeading", Toast.LENGTH_SHORT).show();
+        }
 
     }
 
@@ -489,7 +502,7 @@ public class Heading extends DialogFragment {
         gimbal.rotate(rotation, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
-                Toast.makeText(getContext(), "Gimbal rotates to: ", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Gimbal rotates to: " + gYaw, Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -518,8 +531,8 @@ public class Heading extends DialogFragment {
         if (DJISDKManager.getInstance() != null) {
             BaseProduct product = DJISDKManager.getInstance().getProduct();
             if (product != null) {
-                    gimbal = ((Aircraft) product).getGimbal();
-                }
+                gimbal = ((Aircraft) product).getGimbal();
+            }
         }
     }
 }

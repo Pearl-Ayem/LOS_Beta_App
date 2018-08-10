@@ -58,14 +58,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng headingOrg;
     public LatLng headingDest;
     public Double headingCalc;
+    public float gimPitch;
+    public float gimRoll;
+    public float gimYaw;
 
 
 
     @Override
-    public void sendInput(LatLng o, LatLng d, Double h) {
+    public void sendInput(LatLng o, LatLng d, Double h, float gp, float gr, float gy) {
         headingOrg = o;
         headingDest = d;
         headingCalc = h;
+        gimPitch = gp;
+        gimRoll = gr;
+        gimYaw = gy;
         setMarkers();
     }
 
@@ -295,6 +301,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     public LatLng getHeadingDest() {
         return headingDest;
+    }
+
+    public float getGimPitch() {
+        return gimPitch;
+    }
+
+    public float getGimRoll() {
+        return gimRoll;
+    }
+
+    public float getGimYaw() {
+        return gimYaw;
     }
 
 }
