@@ -121,9 +121,11 @@ public class Heading extends DialogFragment {
         updateHeading();
 
 
-
         if (gYaw == null && gPitch == null && gYaw == null) {
             pointDroneToTrueNorth();
+            if (mFlightController != null) {
+                Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + mFlightController.getCompass().getHeading(), Toast.LENGTH_LONG).show();
+            }
         }
 
 
@@ -142,8 +144,8 @@ public class Heading extends DialogFragment {
                             origin = curLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
-                            pointDroneToTrueNorth();
-                            pointGimbalToTiePoint();
+//                            pointDroneToTrueNorth();
+//                            pointGimbalToTiePoint();
 
                             break;
                         case 1:
@@ -154,8 +156,8 @@ public class Heading extends DialogFragment {
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
-                            pointDroneToTrueNorth();
-                            pointGimbalToTiePoint();
+//                            pointDroneToTrueNorth();
+//                            pointGimbalToTiePoint();
                             break;
                     }
 
@@ -274,7 +276,7 @@ public class Heading extends DialogFragment {
             pointDroneToTrueNorth();
             pointGimbalToTiePoint();
         } catch (NullPointerException e) {
-            //do nothing
+            Toast.makeText(getContext(), "updateHeading - NullPointer", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -366,7 +368,6 @@ public class Heading extends DialogFragment {
 
     private void updateDroneLatLon() {
         if (isFlightControllerSupported()) {
-//            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
             mFlightController.setStateCallback(new FlightControllerState.Callback() {
                 @Override
                 public void onUpdate(FlightControllerState
@@ -465,24 +466,24 @@ public class Heading extends DialogFragment {
 
     private void pointGimbalToTiePoint() {
         try {
-            Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
-
-            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
-                @Override
-                public void onResult(DJIError error) {
-                    if (error == null) {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
+//
+//            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+//                @Override
+//                public void onResult(DJIError error) {
+//                    if (error == null) {
+//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
 
             Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
-            builder.roll(gRoll);
+            builder.roll(0);
             gRoll = builder.build().getRoll();
 
-            builder.pitch(gPitch);
+            builder.pitch(0);
             gPitch = builder.build().getPitch();
 
             Float newYaw = (headingCalc).floatValue();
@@ -545,20 +546,20 @@ public class Heading extends DialogFragment {
     private void pointDroneToTrueNorth() {
         try {
 
-            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
-                @Override
-                public void onResult(DJIError error) {
-                    if (error == null) {
-                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+//                @Override
+//                public void onResult(DJIError error) {
+//                    if (error == null) {
+//                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
 
 
             final float droneHeading = getDroneHeading();
-            Toast.makeText(getContext(), "pointDroneToTrueNorth- Current AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "pointDroneToTrueNorth- Original AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
 
 
             final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
@@ -566,7 +567,7 @@ public class Heading extends DialogFragment {
             rotateToTrueNorthBuilder.roll(0);
             rotateToTrueNorthBuilder.pitch(0);
             float rotateTo = droneHeading * (-1);
-            Toast.makeText(getContext(), "pointDroneToTrueNorth- AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(), "pointDroneToTrueNorth- rotate this for North: " + rotateTo, Toast.LENGTH_LONG).show();
             rotateToTrueNorthBuilder.yaw(rotateTo);
 
 
@@ -574,10 +575,7 @@ public class Heading extends DialogFragment {
                 @Override
                 public void onResult(DJIError djiError) {
                     if (djiError == null) {
-                        Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + mFlightController.getCompass().getHeading(), Toast.LENGTH_LONG).show();
-                        gRoll = rotateToTrueNorthBuilder.build().getRoll();
-                        gPitch = rotateToTrueNorthBuilder.build().getPitch();
-                        gYaw = rotateToTrueNorthBuilder.build().getYaw();
+                        Toast.makeText(getContext(), "Point North success", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "Drone could not be rotated to North", Toast.LENGTH_LONG).show();
                     }
@@ -587,6 +585,7 @@ public class Heading extends DialogFragment {
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "Gimbal is Null", Toast.LENGTH_SHORT).show();
         }
+
 
     }
 
