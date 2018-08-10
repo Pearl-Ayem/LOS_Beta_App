@@ -11,16 +11,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.location.Location;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -58,14 +53,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng headingOrg;
     public LatLng headingDest;
     public Double headingCalc;
-    public float gimPitch;
-    public float gimRoll;
-    public float gimYaw;
-
+    public Float gimPitch;
+    public Float gimRoll;
+    public Float gimYaw;
 
 
     @Override
-    public void sendInput(LatLng o, LatLng d, Double h, float gp, float gr, float gy) {
+    public void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy) {
         headingOrg = o;
         headingDest = d;
         headingCalc = h;
@@ -80,7 +74,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps2);
-        mSearchText =  findViewById(R.id.input_search);
+        mSearchText = findViewById(R.id.input_search);
         mLaunchHeading = findViewById(R.id.ic_heading_launcher);
         mChangeMapType = findViewById(R.id.ic_mapTypes);
 
@@ -303,15 +297,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return headingDest;
     }
 
-    public float getGimPitch() {
+    public Float getGimPitch() {
         return gimPitch;
     }
 
-    public float getGimRoll() {
+    public Float getGimRoll() {
         return gimRoll;
     }
 
-    public float getGimYaw() {
+    public Float getGimYaw() {
         return gimYaw;
     }
 
