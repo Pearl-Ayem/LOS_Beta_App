@@ -75,7 +75,8 @@ public class Heading extends DialogFragment {
     private FlightController mFlightController = null;
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
-    private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
+    private static String DUMMY = "";  //dummy spinner object
+    private static final String[] dropdown = new String[]{DUMMY, BASE_LOCATION, DRONE_LOCATION};
     private Float gPitch;
     private Float gRoll;
     private Float gYaw;
@@ -138,6 +139,10 @@ public class Heading extends DialogFragment {
                 try {
                     switch (position) {
                         case 0:
+                            //do nothing
+                            break;
+
+                        case 1:
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
@@ -148,7 +153,7 @@ public class Heading extends DialogFragment {
 //                            pointGimbalToTiePoint();
 
                             break;
-                        case 1:
+                        case 2:
                             // Whatever you want to happen when the second item gets selected
                             mHeadingOrigin.setText("");
                             updateDroneLatLon();
@@ -183,6 +188,9 @@ public class Heading extends DialogFragment {
                 try {
                     switch (position) {
                         case 0:
+                            //do nothing
+                            break;
+                        case 1:
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
@@ -193,7 +201,7 @@ public class Heading extends DialogFragment {
 //                            pointGimbalToTiePoint();
 
                             break;
-                        case 1:
+                        case 2:
 
                             // Whatever you want to happen when the second item gets selected
                             mHeadingDest.setText("");
@@ -296,10 +304,7 @@ public class Heading extends DialogFragment {
             return latlon;
         } catch (NullPointerException e) {
             //do nothing
-        } catch (NumberFormatException e) {
-            //do nothing
         }
-
         return null;
     }
 
@@ -383,101 +388,20 @@ public class Heading extends DialogFragment {
         }
     }
 
-    private void pointDroneToHeadingACYaw() {
-//        if (isFlightControllerSupported()) {
-//
-//            boolean virtualStickModeAvailable = mFlightController.isVirtualStickControlModeAvailable();
-//            Toast.makeText(getContext(), "isVirtualStickControlModeAvailable : " + virtualStickModeAvailable, Toast.LENGTH_LONG).show();
-//
-//
-//            mFlightController.setVirtualStickModeEnabled(true, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//
-//                }
-//            });
-//
-//            mFlightController.setFlightOrientationMode(FlightOrientationMode.AIRCRAFT_HEADING, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//
-//                }
-//            });
-//
-//            mFlightController.setTerrainFollowModeEnabled(false, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//
-//                }
-//            });
-//
-//            mFlightController.setTripodModeEnabled(false, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//
-//                }
-//            });
-//
-//
-//            final FlightControlData mflightControlData = new FlightControlData(pitch, roll, yaw, throttle);
-//
-//
-//            mFlightController.setYawControlMode(YawControlMode.ANGLE);
-//            mFlightController.setRollPitchControlMode(RollPitchControlMode.ANGLE);
-//
-//
-//            mflightControlData.setPitch(0);
-//            pitch = mflightControlData.getPitch();
-//            Toast.makeText(getContext(), "Pitch: " + pitch, Toast.LENGTH_SHORT).show();
-//
-//
-//            mflightControlData.setRoll(0);
-//            roll = mflightControlData.getRoll();
-//            Toast.makeText(getContext(), "Roll: " + roll, Toast.LENGTH_SHORT).show();
-//
-//            mflightControlData.setVerticalThrottle(0);
-//            throttle = mflightControlData.getVerticalThrottle();
-//            Toast.makeText(getContext(), "VerticalThrottle: " + throttle, Toast.LENGTH_SHORT).show();
-//
-//
-//            Toast.makeText(getContext(), "Old Yaw: " + mflightControlData.getYaw(), Toast.LENGTH_SHORT).show();
-//            float y = (headingCalc).floatValue();
-//            mflightControlData.setYaw(y);
-//            yaw = mflightControlData.getYaw();
-//            Toast.makeText(getContext(), "New Yaw: " + yaw, Toast.LENGTH_SHORT).show();
-//
-//            Toast.makeText(getContext(), "Use this yaw: " + mflightControlData.getYaw(), Toast.LENGTH_SHORT).show();
-//
-//
-//            mFlightController.sendVirtualStickFlightControlData(mflightControlData, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError error) {
-//                    if (error == null) {
-//                        Toast.makeText(getContext(), "Rotation: success", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        showToast(error.getDescription());
-//                    }
-//                }
-//            });
-//
-//            
-//        }
-    }
-
     private void pointGimbalToTiePoint() {
         try {
-//            Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
-//
-//            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError error) {
-//                    if (error == null) {
-//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
+            Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
+
+            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
             Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
             builder.roll(0);
@@ -546,16 +470,16 @@ public class Heading extends DialogFragment {
     private void pointDroneToTrueNorth() {
         try {
 
-//            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError error) {
-//                    if (error == null) {
-//                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
-//            });
+            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError error) {
+                    if (error == null) {
+                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                    } else {
+                        Toast.makeText(getContext(), "pointDroneToTrueNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
 
 
             final float droneHeading = getDroneHeading();
