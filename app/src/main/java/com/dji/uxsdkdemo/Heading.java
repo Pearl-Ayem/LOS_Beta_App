@@ -93,7 +93,6 @@ public class Heading extends DialogFragment {
         mHeadingOrigin = view.findViewById(R.id.origin);
         mHeadingDest = view.findViewById(R.id.dest);
         mHeading = view.findViewById(R.id.heading);
-
         originSpinner = view.findViewById(R.id.more_options_origin);
         destSpinner = view.findViewById(R.id.more_options_dest);
 
@@ -122,9 +121,9 @@ public class Heading extends DialogFragment {
         updateHeading();
 
 
-        if (gYaw == null && gPitch == null && gYaw == null) {
-            pointDroneToTrueNorth();
+        if (gYaw == null || gPitch == null || gYaw == null) {
             if (mFlightController != null) {
+                pointDroneToTrueNorth();
                 Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + mFlightController.getCompass().getHeading(), Toast.LENGTH_LONG).show();
             }
         }
@@ -149,20 +148,15 @@ public class Heading extends DialogFragment {
                             origin = curLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
-//                            pointDroneToTrueNorth();
-//                            pointGimbalToTiePoint();
-
                             break;
+
                         case 2:
                             // Whatever you want to happen when the second item gets selected
-                            mHeadingOrigin.setText("");
                             updateDroneLatLon();
                             origin = droneLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
-//                            pointDroneToTrueNorth();
-//                            pointGimbalToTiePoint();
                             break;
                     }
 
@@ -194,30 +188,24 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
-                            mHeadingDest.setText(makeLatLonStr(curLatLon));
                             tie_point = curLatLon;
+                            mHeadingDest.setText(makeLatLonStr(tie_point));
                             updateHeading();
-//                            pointDroneToTrueNorth();
-//                            pointGimbalToTiePoint();
-
                             break;
+
                         case 2:
 
                             // Whatever you want to happen when the second item gets selected
-                            mHeadingDest.setText("");
                             updateDroneLatLon();
                             tie_point = droneLatLon;
                             mHeadingDest.setText(makeLatLonStr(tie_point));
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
-//                            pointDroneToTrueNorth();
-//                            pointGimbalToTiePoint();
                             break;
                     }
 
 
                 } catch (NullPointerException e) {
-
                     //do nothing
                 }
             }
@@ -235,6 +223,7 @@ public class Heading extends DialogFragment {
                         || i == EditorInfo.IME_ACTION_NEXT
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
                     origin = convertoLatLon(textView.getText().toString());
+                    updateHeading();
                     return true;
                 }
                 return false;
@@ -280,7 +269,8 @@ public class Heading extends DialogFragment {
     private void updateHeading() {
         try {
             double heading = getHeading(origin, tie_point);
-            mHeading.setText(" Heading: " + heading);
+            mHeading.setText(" Heading: " + headingCalc);
+
             pointDroneToTrueNorth();
             pointGimbalToTiePoint();
         } catch (NullPointerException e) {
@@ -300,8 +290,7 @@ public class Heading extends DialogFragment {
             String[] latlonString = input.split(",");
             double lat = Double.parseDouble(latlonString[0]);
             double lon = Double.parseDouble(latlonString[1]);
-            LatLng latlon = new LatLng(lat, lon);
-            return latlon;
+            return  new LatLng(lat, lon);
         } catch (NullPointerException e) {
             //do nothing
         }
@@ -321,8 +310,7 @@ public class Heading extends DialogFragment {
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;
         double lon = ll.longitude;
-        String out = lat + "," + lon;
-        return out;
+        return (lat + "," + lon);
     }
 
     private void useCurrentLocationForHeading() {
@@ -379,8 +367,7 @@ public class Heading extends DialogFragment {
                                              djiFlightControllerCurrentState) {
                     droneLocationLat = djiFlightControllerCurrentState.getAircraftLocation().getLatitude();
                     droneLocationLng = djiFlightControllerCurrentState.getAircraftLocation().getLongitude();
-                    LatLng droneloc = new LatLng(droneLocationLat, droneLocationLng);
-                    droneLatLon = droneloc;
+                    droneLatLon = new LatLng(droneLocationLat, droneLocationLng);
                 }
             });
         } else {
@@ -405,16 +392,18 @@ public class Heading extends DialogFragment {
 
             Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
             builder.roll(0);
-            gRoll = builder.build().getRoll();
 
             builder.pitch(0);
-            gPitch = builder.build().getPitch();
 
             Float newYaw = (headingCalc).floatValue();
             builder.yaw(newYaw);
-            gYaw = builder.build().getYaw();
+            Toast.makeText(getContext(), "New yaw is: " + newYaw, Toast.LENGTH_SHORT).show();
 
             sendRotateGimbalCommand(builder.build());
+
+            gPitch = builder.build().getPitch();
+            gRoll = builder.build().getRoll();
+            gYaw = newYaw;
 
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "Null Pointer Found in pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
@@ -423,12 +412,12 @@ public class Heading extends DialogFragment {
     }
 
 
-    private void sendRotateGimbalCommand(Rotation rotation) {
+    private void sendRotateGimbalCommand(final Rotation rotation) {
         Toast.makeText(getContext(), "In method sendRotateGimbalCommand ", Toast.LENGTH_SHORT).show();
         gimbal.rotate(rotation, new CommonCallbacks.CompletionCallback() {
             @Override
             public void onResult(DJIError djiError) {
-                Toast.makeText(getContext(), "Gimbal rotated to tie-point: " + gYaw, Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "Gimbal rotated to tie-point: " + rotation.getYaw(), Toast.LENGTH_SHORT).show();
             }
         });
     }
@@ -463,8 +452,7 @@ public class Heading extends DialogFragment {
     }
 
     private float getDroneHeading() {
-        float compassHeading = mFlightController.getCompass().getHeading();
-        return compassHeading;
+        return mFlightController.getCompass().getHeading();
     }
 
     private void pointDroneToTrueNorth() {
