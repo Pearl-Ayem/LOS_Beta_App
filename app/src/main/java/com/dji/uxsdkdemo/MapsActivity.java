@@ -50,12 +50,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Marker originMarker;
     public Marker destMarker;
 
-    public LatLng headingOrg;
-    public LatLng headingDest;
-    public Double headingCalc;
-    public Float gimPitch;
-    public Float gimRoll;
-    public Float gimYaw;
+    public static LatLng headingOrg;
+    public static LatLng headingDest;
+    public static Double headingCalc;
+    public static Float gimPitch;
+    public static Float gimRoll;
+    public static Float gimYaw;
 
 
     @Override
