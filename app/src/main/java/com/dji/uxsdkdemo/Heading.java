@@ -76,7 +76,7 @@ public class Heading extends DialogFragment {
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static String DUMMY = "";  //dummy spinner object
-    private static final String[] dropdown = new String[]{DUMMY, BASE_LOCATION, DRONE_LOCATION};
+    private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION, DUMMY};
     private Float gPitch;
     private Float gRoll;
     private Float gYaw;
@@ -94,7 +94,9 @@ public class Heading extends DialogFragment {
         mHeadingDest = view.findViewById(R.id.dest);
         mHeading = view.findViewById(R.id.heading);
         originSpinner = view.findViewById(R.id.more_options_origin);
+        originSpinner.setSelection(2);
         destSpinner = view.findViewById(R.id.more_options_dest);
+        destSpinner.setSelection(2);
 
         if (isFlightControllerSupported()) {
             mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
@@ -118,7 +120,7 @@ public class Heading extends DialogFragment {
         gPitch = ((MapsActivity) getActivity()).getGimPitch();
         gRoll = ((MapsActivity) getActivity()).getGimRoll();
 
-        updateHeading();
+//        updateHeading();
 
 
         if (gYaw == null || gPitch == null || gYaw == null) {
@@ -138,25 +140,24 @@ public class Heading extends DialogFragment {
                 try {
                     switch (position) {
                         case 0:
-                            //do nothing
-                            break;
-
-                        case 1:
                             // Whatever you want to happen when the first item gets selected
-
                             useCurrentLocationForHeading();
                             origin = curLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
                             break;
 
-                        case 2:
+                        case 1:
                             // Whatever you want to happen when the second item gets selected
                             updateDroneLatLon();
                             origin = droneLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case 2:
+                            //do nothing
                             break;
                     }
 
@@ -182,25 +183,24 @@ public class Heading extends DialogFragment {
                 try {
                     switch (position) {
                         case 0:
-                            //do nothing
-                            break;
-                        case 1:
                             // Whatever you want to happen when the first item gets selected
-
                             useCurrentLocationForHeading();
                             tie_point = curLatLon;
                             mHeadingDest.setText(makeLatLonStr(tie_point));
                             updateHeading();
                             break;
 
-                        case 2:
-
+                        case 1:
                             // Whatever you want to happen when the second item gets selected
                             updateDroneLatLon();
                             tie_point = droneLatLon;
                             mHeadingDest.setText(makeLatLonStr(tie_point));
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case 2:
+                            //do nothing
                             break;
                     }
 
@@ -290,7 +290,7 @@ public class Heading extends DialogFragment {
             String[] latlonString = input.split(",");
             double lat = Double.parseDouble(latlonString[0]);
             double lon = Double.parseDouble(latlonString[1]);
-            return  new LatLng(lat, lon);
+            return new LatLng(lat, lon);
         } catch (NullPointerException e) {
             //do nothing
         }
