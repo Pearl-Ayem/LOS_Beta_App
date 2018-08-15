@@ -167,6 +167,7 @@ public class Heading extends DialogFragment {
                             useCurrentLocationForHeading();
                             origin = curLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
+                            originStr = mHeadingOrigin.getText().toString();
                             updateHeading();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
@@ -177,6 +178,7 @@ public class Heading extends DialogFragment {
                             updateDroneLatLon();
                             origin = droneLatLon;
                             mHeadingOrigin.setText(makeLatLonStr(origin));
+                            originStr = mHeadingOrigin.getText().toString();
                             updateHeading();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
@@ -214,6 +216,7 @@ public class Heading extends DialogFragment {
                             useCurrentLocationForHeading();
                             tie_point = curLatLon;
                             mHeadingDest.setText(makeLatLonStr(tie_point));
+                            tie_pointStr = mHeadingDest.getText().toString();
                             updateHeading();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
@@ -224,6 +227,7 @@ public class Heading extends DialogFragment {
                             updateDroneLatLon();
                             tie_point = droneLatLon;
                             mHeadingDest.setText(makeLatLonStr(tie_point));
+                            tie_pointStr = mHeadingDest.getText().toString();
                             updateHeading();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
@@ -253,7 +257,8 @@ public class Heading extends DialogFragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH
                         || i == EditorInfo.IME_ACTION_NEXT
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    origin = convertoLatLon(textView.getText().toString());
+                    originStr = textView.getText().toString();
+                    origin = convertoLatLon(originStr);
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
@@ -269,7 +274,8 @@ public class Heading extends DialogFragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH
                         || i == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    tie_point = convertoLatLon(textView.getText().toString());
+                    tie_pointStr = textView.getText().toString();
+                    tie_point = convertoLatLon(tie_pointStr);
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
@@ -292,6 +298,16 @@ public class Heading extends DialogFragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
 //                mOnInputListener.sendInput(origin, tie_point, headingCalc, gPitch, gRoll, gYaw);
+
+                Bundle argsHeading = new Bundle();
+                argsHeading.putString(originStr, "Origin Coords from Heading");
+                argsHeading.putString(tie_pointStr, "Dest Coords  from Heading");
+
+                if (gPitch != null && gRoll != null && gYaw != null){
+                    argsHeading.putFloat("yawH", gYaw);
+                    argsHeading.putFloat("rollH", gRoll);
+                    argsHeading.putFloat("pitchH", gPitch);
+                }
                 getDialog().dismiss();
             }
         });
