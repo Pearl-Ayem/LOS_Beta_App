@@ -51,14 +51,12 @@ import static com.google.maps.android.SphericalUtil.computeHeading;
 public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
-    public interface onInputListener {
-        void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy);
-    }
+//    public interface onInputListener {
+//        void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy);
+//    }
 
-    public onInputListener mOnInputListener;
+//    public onInputListener mOnInputListener;
     private FusedLocationProviderClient hFusedLocationProviderClient;
-
-
     private AutoCompleteTextView mHeadingOrigin;
     private AutoCompleteTextView mHeadingDest;
     private TextView mHeading, mActionOk, mActionCancel;
@@ -67,8 +65,10 @@ public class Heading extends DialogFragment {
 
 
     private static LatLng origin;
+    private static String originStr;
     private static LatLng tie_point;
-    private  LatLng curLatLon;
+    private static String tie_pointStr;
+    private LatLng curLatLon;
     private LatLng droneLatLon;
     private static Double headingCalc;
     private double droneLocationLat = 181, droneLocationLng = 181;
@@ -78,8 +78,8 @@ public class Heading extends DialogFragment {
     private static String DUMMY = "";  //dummy spinner object
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION, DUMMY};
     public static Float gPitch;
-    public static  Float gRoll;
-    public static  Float gYaw;
+    public static Float gRoll;
+    public static Float gYaw;
 
 
     @Nullable
@@ -106,19 +106,42 @@ public class Heading extends DialogFragment {
             gimbal = getGimbalInstance();
         }
 
-        if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-            origin = ((MapsActivity) getActivity()).getHeadingOrg();
+        Bundle mArgs = getArguments();
+        originStr = mArgs.getString("Origin Coords Str");
+        tie_pointStr = mArgs.getString("Dest Coords Str");
+
+        if (originStr != null) {
+            origin = convertoLatLon(originStr);
             mHeadingOrigin.setText(makeLatLonStr(origin));
+
         }
 
-        if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-            tie_point = ((MapsActivity) getActivity()).getHeadingDest();
+        if (tie_pointStr != null) {
+            tie_point = convertoLatLon(tie_pointStr);
             mHeadingDest.setText(makeLatLonStr(tie_point));
+
+
         }
 
-        gYaw = ((MapsActivity) getActivity()).getGimYaw();
-        gPitch = ((MapsActivity) getActivity()).getGimPitch();
-        gRoll = ((MapsActivity) getActivity()).getGimRoll();
+
+        gYaw = mArgs.getFloat("yaw");
+        gRoll = mArgs.getFloat("roll");
+        gPitch = mArgs.getFloat("pitch");
+
+//        if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
+//            origin = ((MapsActivity) getActivity()).getHeadingOrg();
+//            mHeadingOrigin.setText(makeLatLonStr(origin));
+//        }
+//
+//        if (((MapsActivity) getActivity()).getHeadingDest() != null) {
+//            tie_point = ((MapsActivity) getActivity()).getHeadingDest();
+//            mHeadingDest.setText(makeLatLonStr(tie_point));
+//        }
+//
+//        gYaw = ((MapsActivity) getActivity()).getGimYaw();
+//        gPitch = ((MapsActivity) getActivity()).getGimPitch();
+//        gRoll = ((MapsActivity) getActivity()).getGimRoll();
+
 
         updateHeading();
 
@@ -268,7 +291,7 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-                mOnInputListener.sendInput(origin, tie_point, headingCalc, gPitch, gRoll, gYaw);
+//                mOnInputListener.sendInput(origin, tie_point, headingCalc, gPitch, gRoll, gYaw);
                 getDialog().dismiss();
             }
         });
@@ -303,15 +326,15 @@ public class Heading extends DialogFragment {
         return null;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mOnInputListener = (onInputListener) getActivity();
-        } catch (ClassCastException e) {
-            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        try {
+//            mOnInputListener = (onInputListener) getActivity();
+//        } catch (ClassCastException e) {
+//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+//        }
+//    }
 
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;
@@ -365,7 +388,7 @@ public class Heading extends DialogFragment {
         }
     }
 
-    private void  updateDroneLatLon() {
+    private void updateDroneLatLon() {
         if (isFlightControllerSupported()) {
             mFlightController.setStateCallback(new FlightControllerState.Callback() {
                 @Override

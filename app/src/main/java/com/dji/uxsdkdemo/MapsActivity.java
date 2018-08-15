@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, Heading.onInputListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
 
 
     private static final float DEFAULT_ZOOM = 15f;
@@ -56,18 +56,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static Float gimPitch;
     public static Float gimRoll;
     public static Float gimYaw;
+    public static String headingOrgStr;
+    public static String headingDestStr;
 
 
-    @Override
-    public void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy) {
-        headingOrg = o;
-        headingDest = d;
-        headingCalc = h;
-        gimPitch = gp;
-        gimRoll = gr;
-        gimYaw = gy;
-        setMarkers();
-    }
+//    @Override
+//    public void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy) {
+//        headingOrg = o;
+//        headingDest = d;
+//        headingCalc = h;
+//        gimPitch = gp;
+//        gimRoll = gr;
+//        gimYaw = gy;
+//        setMarkers();
+//    }
 
 
     @Override
@@ -150,8 +152,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mLaunchHeading.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                Bundle args = new Bundle();
+                args.putString(headingOrgStr, "Origin Coords Str");
+                args.putString(headingDestStr, "Dest Coords Str");
+                 if (gimPitch != null && gimRoll != null && gimYaw != null){
+                     args.putFloat("yaw", gimYaw);
+                     args.putFloat("roll", gimRoll);
+                     args.putFloat("pitch", gimPitch);
+                 }
+
                 Log.d(TAG, "opening heading fragment");
                 Heading headingFragment = new Heading();
+                headingFragment.setArguments(args);
                 headingFragment.show(getSupportFragmentManager(), "Heading Dialogue");
             }
         });
