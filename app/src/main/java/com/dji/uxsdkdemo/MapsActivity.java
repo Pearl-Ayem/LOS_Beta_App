@@ -36,7 +36,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback{
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, Heading.onInputListener {
 
 
     private static final float DEFAULT_ZOOM = 15f;
@@ -53,23 +53,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public static LatLng headingOrg;
     public static LatLng headingDest;
     public static Double headingCalc;
-    public static Float gimPitch;
-    public static Float gimRoll;
-    public static Float gimYaw;
     public static String headingOrgStr;
     public static String headingDestStr;
 
 
-//    @Override
-//    public void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy) {
-//        headingOrg = o;
-//        headingDest = d;
-//        headingCalc = h;
-//        gimPitch = gp;
-//        gimRoll = gr;
-//        gimYaw = gy;
-//        setMarkers();
-//    }
+    @Override
+    public void sendInput(LatLng o, LatLng d, Double h) {
+        headingOrg = o;
+        headingDest = d;
+        headingCalc = h;
+        setMarkers();
+    }
 
 
     @Override
@@ -125,7 +119,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap.getUiSettings().setCompassEnabled(true);
         mMap.getUiSettings().setRotateGesturesEnabled(true);
 
-
         init();
 
     }
@@ -153,13 +146,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onClick(View view) {
                 Bundle args = new Bundle();
-                args.putString(headingOrgStr, "Origin Coords Str");
-                args.putString(headingDestStr, "Dest Coords Str");
-                 if (gimPitch != null && gimRoll != null && gimYaw != null){
-                     args.putFloat("yaw", gimYaw);
-                     args.putFloat("roll", gimRoll);
-                     args.putFloat("pitch", gimPitch);
-                 }
+                if (headingOrg != null && headingDest != null) {
+                    headingOrgStr = headingOrg.toString();
+                    headingDestStr = headingDest.toString();
+                    args.putString(headingOrgStr, "Origin Coords Str");
+                    args.putString(headingDestStr, "Dest Coords Str");
+                }
 
                 Log.d(TAG, "opening heading fragment");
                 Heading headingFragment = new Heading();
@@ -193,10 +185,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             public void onMarkerDragEnd(Marker marker) {
                 if (marker.equals(originMarker)) {
                     headingOrg = marker.getPosition();
+                    headingOrgStr = headingOrg.toString();
                 }
 
                 if (marker.equals(destMarker)) {
                     headingDest = marker.getPosition();
+                    headingDestStr = headingDest.toString();
+
                 }
             }
         });
@@ -309,16 +304,5 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         return headingDest;
     }
 
-    public Float getGimPitch() {
-        return gimPitch;
-    }
-
-    public Float getGimRoll() {
-        return gimRoll;
-    }
-
-    public Float getGimYaw() {
-        return gimYaw;
-    }
 
 }

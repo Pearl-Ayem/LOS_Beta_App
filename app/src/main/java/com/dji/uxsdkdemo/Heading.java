@@ -51,11 +51,11 @@ import static com.google.maps.android.SphericalUtil.computeHeading;
 public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
-//    public interface onInputListener {
-//        void sendInput(LatLng o, LatLng d, Double h, Float gp, Float gr, Float gy);
-//    }
+    public interface onInputListener {
+        void sendInput(LatLng o, LatLng d, Double h);
+    }
 
-//    public onInputListener mOnInputListener;
+    public onInputListener mOnInputListener;
     private FusedLocationProviderClient hFusedLocationProviderClient;
     private AutoCompleteTextView mHeadingOrigin;
     private AutoCompleteTextView mHeadingDest;
@@ -123,30 +123,10 @@ public class Heading extends DialogFragment {
 
         }
 
-
-        gYaw = mArgs.getFloat("yaw");
-        gRoll = mArgs.getFloat("roll");
-        gPitch = mArgs.getFloat("pitch");
-
-//        if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-//            origin = ((MapsActivity) getActivity()).getHeadingOrg();
-//            mHeadingOrigin.setText(makeLatLonStr(origin));
-//        }
-//
-//        if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-//            tie_point = ((MapsActivity) getActivity()).getHeadingDest();
-//            mHeadingDest.setText(makeLatLonStr(tie_point));
-//        }
-//
-//        gYaw = ((MapsActivity) getActivity()).getGimYaw();
-//        gPitch = ((MapsActivity) getActivity()).getGimPitch();
-//        gRoll = ((MapsActivity) getActivity()).getGimRoll();
-
-
         updateHeading();
 
 
-        if (gYaw == null || gPitch == null || gYaw == null) {
+        if (gYaw == null || gPitch == null || gRoll == null) {
             if (mFlightController != null) {
                 pointDroneToTrueNorth();
                 Toast.makeText(getContext(), "Drone rotated to true north.  Drone Heading:  " + mFlightController.getCompass().getHeading(), Toast.LENGTH_LONG).show();
@@ -297,17 +277,7 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-//                mOnInputListener.sendInput(origin, tie_point, headingCalc, gPitch, gRoll, gYaw);
-
-                Bundle argsHeading = new Bundle();
-                argsHeading.putString(originStr, "Origin Coords from Heading");
-                argsHeading.putString(tie_pointStr, "Dest Coords  from Heading");
-
-                if (gPitch != null && gRoll != null && gYaw != null){
-                    argsHeading.putFloat("yawH", gYaw);
-                    argsHeading.putFloat("rollH", gRoll);
-                    argsHeading.putFloat("pitchH", gPitch);
-                }
+                mOnInputListener.sendInput(origin, tie_point, headingCalc);
                 getDialog().dismiss();
             }
         });
