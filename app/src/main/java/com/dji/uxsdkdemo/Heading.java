@@ -82,10 +82,34 @@ public class Heading extends DialogFragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState == null){
+        if (savedInstanceState == null) {
             //fragment created for the first time
             pointDroneToTrueNorth();
+        } else {
+            if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
+                origin = ((MapsActivity) getActivity()).getHeadingOrg();
+                originStr = makeLatLonStr(origin);
+                mHeadingOrigin.setText(originStr);
+            } else {
+                originStr = savedInstanceState.getString("origin");
+                origin = convertoLatLon(originStr);
+                mHeadingOrigin.setText(originStr);
+            }
+
+            if (((MapsActivity) getActivity()).getHeadingDest() != null) {
+                tie_point = ((MapsActivity) getActivity()).getHeadingDest();
+                tie_pointStr = makeLatLonStr(tie_point);
+                mHeadingDest.setText(tie_pointStr);
+            } else {
+                tie_pointStr = savedInstanceState.getString("tie_point");
+                tie_point = convertoLatLon(tie_pointStr);
+                mHeadingDest.setText(tie_pointStr);
+            }
+
         }
+
+        updateHeading();
+
     }
 
     @Nullable
@@ -108,19 +132,6 @@ public class Heading extends DialogFragment {
         if (getGimbalInstance() != null) {
             gimbal = getGimbalInstance();
         }
-
-
-        if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-            origin = ((MapsActivity) getActivity()).getHeadingOrg();
-            mHeadingOrigin.setText(makeLatLonStr(origin));
-        }
-
-        if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-            tie_point = ((MapsActivity) getActivity()).getHeadingDest();
-            mHeadingDest.setText(makeLatLonStr(tie_point));
-        }
-        updateHeading();
-
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
