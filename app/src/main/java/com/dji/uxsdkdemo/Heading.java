@@ -66,9 +66,9 @@ public class Heading extends DialogFragment {
     private Gimbal gimbal = null;
 
 
-    private LatLng origin;
+    private static LatLng origin;
     private String originStr;
-    private LatLng tie_point;
+    private static LatLng tie_point;
     private String tie_pointStr;
     private LatLng curLatLon;
     private LatLng droneLatLon;
@@ -79,10 +79,61 @@ public class Heading extends DialogFragment {
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
 
+//    @Override
+//    public void onCreate(@Nullable Bundle savedInstanceState) {
+//        super.onCreate(savedInstanceState);
+//        if (((MapsActivity) getActivity()).getHeadingOrg() == null ||((MapsActivity) getActivity()).getHeadingDest() != null)  {
+//            //fragment created for the first time
+//            pointDroneToTrueNorth();
+//        } else {
+//            if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
+//                origin = ((MapsActivity) getActivity()).getHeadingOrg();
+//                originStr = makeLatLonStr(origin);
+//                mHeadingOrigin.setText(originStr);
+//            } else {
+//                originStr = savedInstanceState.getString("origin");
+//                origin = convertoLatLon(originStr);
+//                mHeadingOrigin.setText(originStr);
+//            }
+//
+//            if (((MapsActivity) getActivity()).getHeadingDest() != null) {
+//                tie_point = ((MapsActivity) getActivity()).getHeadingDest();
+//                tie_pointStr = makeLatLonStr(tie_point);
+//                mHeadingDest.setText(tie_pointStr);
+//            } else {
+//                tie_pointStr = savedInstanceState.getString("tie_point");
+//                tie_point = convertoLatLon(tie_pointStr);
+//                mHeadingDest.setText(tie_pointStr);
+//            }
+//
+//        }
+//
+//        updateHeading();
+//
+//    }
+
+    @Nullable
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (savedInstanceState == null) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle
+            savedInstanceState) {
+        View view = inflater.inflate(R.layout.heading_fragment, container, false);
+
+        mActionCancel = view.findViewById(R.id.action_cancel);
+        mActionOk = view.findViewById(R.id.action_ok);
+        mHeadingOrigin = view.findViewById(R.id.origin);
+        mHeadingDest = view.findViewById(R.id.dest);
+        mHeading = view.findViewById(R.id.heading);
+        originSpinner = view.findViewById(R.id.more_options_origin);
+        destSpinner = view.findViewById(R.id.more_options_dest);
+
+        if (isFlightControllerSupported()) {
+            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+        }
+        if (getGimbalInstance() != null) {
+            gimbal = getGimbalInstance();
+        }
+
+        if (((MapsActivity) getActivity()).getHeadingOrg() == null || ((MapsActivity) getActivity()).getHeadingDest() == null) {
             //fragment created for the first time
             pointDroneToTrueNorth();
         } else {
@@ -109,29 +160,6 @@ public class Heading extends DialogFragment {
         }
 
         updateHeading();
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, Bundle
-            savedInstanceState) {
-        View view = inflater.inflate(R.layout.heading_fragment, container, false);
-
-        mActionCancel = view.findViewById(R.id.action_cancel);
-        mActionOk = view.findViewById(R.id.action_ok);
-        mHeadingOrigin = view.findViewById(R.id.origin);
-        mHeadingDest = view.findViewById(R.id.dest);
-        mHeading = view.findViewById(R.id.heading);
-        originSpinner = view.findViewById(R.id.more_options_origin);
-        destSpinner = view.findViewById(R.id.more_options_dest);
-
-        if (isFlightControllerSupported()) {
-            mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
-        }
-        if (getGimbalInstance() != null) {
-            gimbal = getGimbalInstance();
-        }
 
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
@@ -284,12 +312,12 @@ public class Heading extends DialogFragment {
         return view;
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putString("origin", originStr);
-        outState.putString("tie_point", tie_pointStr);
-    }
+//    @Override
+//    public void onSaveInstanceState(Bundle outState) {
+//        super.onSaveInstanceState(outState);
+//        outState.putString("origin", originStr);
+//        outState.putString("tie_point", tie_pointStr);
+//    }
 
     private void updateHeading() {
         try {
@@ -507,7 +535,7 @@ public class Heading extends DialogFragment {
                 }
             });
         } catch (NullPointerException e) {
-            Toast.makeText(getContext(), "Gimbal is Null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "pointToNorth - Gimbal is Null", Toast.LENGTH_SHORT).show();
         }
 
 
