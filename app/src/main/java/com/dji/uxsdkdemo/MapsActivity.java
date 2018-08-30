@@ -100,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        this.mMap = googleMap;
+        mMap = googleMap;
 
         // Add a marker in UAViation and move the camera
         LatLng UAV = new LatLng(49.238074, -122.853361);
@@ -108,15 +108,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .position(UAV).title("UAViation Aerial Solutions")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin1));
         searchMarker = mMap.addMarker(options);
-        this.mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
+        mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
 
 
         getDeviceLocation();
-        this.mMap.setPadding(0, 200, 0, 0);
-        this.mMap.setMyLocationEnabled(true);
-        this.mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        this.mMap.getUiSettings().setCompassEnabled(true);
-        this.mMap.getUiSettings().setRotateGesturesEnabled(true);
+        mMap.setPadding(0, 200, 0, 0);
+        mMap.setMyLocationEnabled(true);
+        mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        mMap.getUiSettings().setCompassEnabled(true);
+        mMap.getUiSettings().setRotateGesturesEnabled(true);
 
         init();
 
@@ -245,11 +245,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void moveCamera(LatLng latLng, float zoom, String t) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
-        this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if (!t.equals("My Location")) {
             MarkerOptions options = new MarkerOptions().position(latLng).title(t);
-            this.mMap.addMarker(options);
+            mMap.addMarker(options);
         }
 
         hideSoftKeyboard();
@@ -277,10 +277,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             MarkerOptions destMarkerOptions = new MarkerOptions().position(headingDest).title("Tie-Point").draggable(true);
             this.destMarker = mMap.addMarker(destMarkerOptions);
-        } else {
-            //do nothing
         }
-
     }
 
     public LatLng getHeadingOrg() {
@@ -294,9 +291,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void setHeadingDest(LatLng headingDest) {
         this.headingDest = headingDest;
-    }
-    public Double getHeadingCalc() {
-        return headingCalc;
     }
     public void setHeadingCalc(Double headingCalc) {
         this.headingCalc = headingCalc;
