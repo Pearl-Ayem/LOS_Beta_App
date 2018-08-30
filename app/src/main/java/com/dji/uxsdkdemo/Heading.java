@@ -2,6 +2,7 @@ package com.dji.uxsdkdemo;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Bundle;
@@ -51,11 +52,11 @@ import static com.google.maps.android.SphericalUtil.computeHeading;
 public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
-    public interface onInputListener {
-        void sendInput(LatLng o, LatLng d, Double h);
-    }
-
-    public onInputListener mOnInputListener;
+//    public interface onInputListener {
+//        void sendInput(LatLng o, LatLng d, Double h);
+//    }
+//
+//    public onInputListener mOnInputListener;
     private FusedLocationProviderClient hFusedLocationProviderClient;
 
 
@@ -111,7 +112,9 @@ public class Heading extends DialogFragment {
                 setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
                 setOriginStr(makeLatLonStr(origin));
                 this.mHeadingOrigin.setText(originStr);
-            } else {
+            }
+
+            else {
                 setOriginStr(savedInstanceState.getString("origin"));
                 setOrigin(convertoLatLon(originStr));
                 this.mHeadingOrigin.setText(originStr);
@@ -121,7 +124,9 @@ public class Heading extends DialogFragment {
                 setTie_point(((MapsActivity) getActivity()).getHeadingDest());
                 setTie_pointStr(makeLatLonStr(tie_point));
                 this.mHeadingDest.setText(tie_pointStr);
-            } else {
+            }
+
+            else {
                 setTie_pointStr(savedInstanceState.getString("tie_point"));
                 setTie_point(convertoLatLon(tie_pointStr));
                 this.mHeadingDest.setText(tie_pointStr);
@@ -273,22 +278,25 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-                mOnInputListener.sendInput(origin, tie_point, headingCalc);
-//                ((MapsActivity) getActivity()).setHeadingDest(tie_point);
-//                ((MapsActivity) getActivity()).setHeadingOrg(origin);
+                Bundle fragmentToActivityOutput = new Bundle();
+                fragmentToActivityOutput.putString("origin", originStr);
+                fragmentToActivityOutput.putString("tie-point", tie_pointStr);
+
+                Intent fToAIntent = new Intent(getActivity(), MapsActivity.class);
+                fToAIntent.putExtras(fragmentToActivityOutput);
+//                startActivity(fToAIntent);
+//                mOnInputListener.sendInput(origin, tie_point, headingCalc);
                 getDialog().dismiss();
             }
         });
-
-
         return view;
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putString("origin", originStr);
-        outState.putString("tie_point", tie_pointStr);
+        outState.putString("origin", this.originStr);
+        outState.putString("tie_point", this.tie_pointStr);
     }
 
     private void updateHeading() {
@@ -319,15 +327,15 @@ public class Heading extends DialogFragment {
         return null;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mOnInputListener = (onInputListener) getActivity();
-        } catch (ClassCastException e) {
-            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        try {
+//            mOnInputListener = (onInputListener) getActivity();
+//        } catch (ClassCastException e) {
+//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+//        }
+//    }
 
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;

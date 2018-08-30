@@ -1,6 +1,7 @@
 package com.dji.uxsdkdemo;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -36,7 +37,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, Heading.onInputListener {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
 
     private static final float DEFAULT_ZOOM = 15f;
@@ -51,18 +52,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Marker destMarker;
 
 
-
     public LatLng headingOrg;
     public LatLng headingDest;
     public Double headingCalc;
+    private String headingOrgStr;
+    private String headingDestStr;
 
-    @Override
-    public void sendInput(LatLng o, LatLng d, Double h) {
-       setHeadingOrg(o);
-       setHeadingDest(d);
-       setHeadingCalc(h);
-       setMarkers();
-    }
+
+//    @Override
+//    public void sendInput(LatLng o, LatLng d, Double h) {
+//       setHeadingOrg(o);
+//       setHeadingDest(d);
+//       setHeadingCalc(h);
+//       setMarkers();
+//    }
 
 
     @Override
@@ -79,7 +82,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .findFragmentById(R.id.mapView);
         mapFragment.getMapAsync(this);
 
+
     }
+
 
 
     /**
@@ -174,7 +179,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 if (marker.equals(originMarker)) {
-                   setHeadingOrg(marker.getPosition());
+                    setHeadingOrg(marker.getPosition());
                 }
 
                 if (marker.equals(destMarker)) {
@@ -182,6 +187,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }
             }
         });
+
+        try {
+            Bundle incomingBundle = getIntent().getExtras();
+            setHeadingOrgStr(incomingBundle.getString("origin"));
+            setHeadingOrg(strToLatLon(headingOrgStr));
+            Toast.makeText(this, "Origin is " + headingOrgStr, Toast.LENGTH_SHORT).show();
+
+            setHeadingDestStr(incomingBundle.getString("tie-point"));
+            setHeadingDest(strToLatLon(headingDestStr));
+            Toast.makeText(this, "Dest is " + headingDestStr, Toast.LENGTH_SHORT).show();
+
+            setMarkers();
+        } catch (NullPointerException e) {
+            //do nothing
+        }
     }
 
 
@@ -280,6 +300,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
+    private LatLng strToLatLon(String input) {
+        try {
+            String[] latlonString = input.split(",");
+            double lat = Double.parseDouble(latlonString[0]);
+            double lon = Double.parseDouble(latlonString[1]);
+            return new LatLng(lat, lon);
+        }  catch (NumberFormatException e) {
+            //do nothing
+        }
+
+        return null;
+    }
+
     public LatLng getHeadingOrg() {
         return headingOrg;
     }
@@ -295,4 +328,17 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void setHeadingCalc(Double headingCalc) {
         this.headingCalc = headingCalc;
     }
+    public String getHeadingOrgStr() {
+        return headingOrgStr;
+    }
+    public void setHeadingOrgStr(String headingOrgStr) {
+        this.headingOrgStr = headingOrgStr;
+    }
+    public String getHeadingDestStr() {
+        return headingDestStr;
+    }
+    public void setHeadingDestStr(String headingDestStr) {
+        this.headingDestStr = headingDestStr;
+    }
+
 }
