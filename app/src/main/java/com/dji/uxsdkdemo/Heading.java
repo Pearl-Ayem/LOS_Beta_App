@@ -81,38 +81,6 @@ public class Heading extends DialogFragment {
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
 
-//    @Override
-//    public void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        if (((MapsActivity) getActivity()).getHeadingOrg() == null ||((MapsActivity) getActivity()).getHeadingDest() != null)  {
-//            //fragment created for the first time
-//            pointDroneToTrueNorth();
-//        } else {
-//            if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-//                origin = ((MapsActivity) getActivity()).getHeadingOrg();
-//                originStr = makeLatLonStr(origin);
-//                mHeadingOrigin.setText(originStr);
-//            } else {
-//                originStr = savedInstanceState.getString("origin");
-//                origin = convertoLatLon(originStr);
-//                mHeadingOrigin.setText(originStr);
-//            }
-//
-//            if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-//                tie_point = ((MapsActivity) getActivity()).getHeadingDest();
-//                tie_pointStr = makeLatLonStr(tie_point);
-//                mHeadingDest.setText(tie_pointStr);
-//            } else {
-//                tie_pointStr = savedInstanceState.getString("tie_point");
-//                tie_point = convertoLatLon(tie_pointStr);
-//                mHeadingDest.setText(tie_pointStr);
-//            }
-//
-//        }
-//
-//        updateHeading();
-//
-//    }
 
     @Nullable
     @Override
@@ -343,26 +311,23 @@ public class Heading extends DialogFragment {
             String[] latlonString = input.split(",");
             double lat = Double.parseDouble(latlonString[0]);
             double lon = Double.parseDouble(latlonString[1]);
-            LatLng latlon = new LatLng(lat, lon);
-            return latlon;
-        } catch (NullPointerException e) {
-            //do nothing
-        } catch (NumberFormatException e) {
+            return new LatLng(lat, lon);
+        }  catch (NumberFormatException e) {
             //do nothing
         }
 
         return null;
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        try {
-//            mOnInputListener = (onInputListener) getActivity();
-//        } catch (ClassCastException e) {
-//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnInputListener = (onInputListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+        }
+    }
 
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;
@@ -504,8 +469,7 @@ public class Heading extends DialogFragment {
     }
 
     private float getDroneHeading() {
-        float compassHeading = mFlightController.getCompass().getHeading();
-        return compassHeading;
+        return mFlightController.getCompass().getHeading();
     }
 
     private void pointDroneToTrueNorth() {
