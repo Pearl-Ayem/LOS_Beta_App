@@ -70,6 +70,8 @@ public class Heading extends DialogFragment {
     private String originStr;
     private static LatLng tie_point;
     private String tie_pointStr;
+
+
     private LatLng curLatLon;
     private LatLng droneLatLon;
     private Double headingCalc;
@@ -133,28 +135,28 @@ public class Heading extends DialogFragment {
             gimbal = getGimbalInstance();
         }
 
-        if (((MapsActivity) getActivity()).getHeadingOrg() == null || ((MapsActivity) getActivity()).getHeadingDest() == null) {
+        if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
             //fragment created for the first time
             pointDroneToTrueNorth();
         } else {
             if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-                origin = ((MapsActivity) getActivity()).getHeadingOrg();
-                originStr = makeLatLonStr(origin);
-                mHeadingOrigin.setText(originStr);
+                setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
+                setOriginStr(makeLatLonStr(origin));
+                this.mHeadingOrigin.setText(originStr);
             } else {
-                originStr = savedInstanceState.getString("origin");
-                origin = convertoLatLon(originStr);
-                mHeadingOrigin.setText(originStr);
+                setOriginStr(savedInstanceState.getString("origin"));
+                setOrigin(convertoLatLon(originStr));
+                this.mHeadingOrigin.setText(originStr);
             }
 
             if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-                tie_point = ((MapsActivity) getActivity()).getHeadingDest();
-                tie_pointStr = makeLatLonStr(tie_point);
-                mHeadingDest.setText(tie_pointStr);
+                setTie_point(((MapsActivity) getActivity()).getHeadingDest());
+                setTie_pointStr(makeLatLonStr(tie_point));
+                this.mHeadingDest.setText(tie_pointStr);
             } else {
-                tie_pointStr = savedInstanceState.getString("tie_point");
-                tie_point = convertoLatLon(tie_pointStr);
-                mHeadingDest.setText(tie_pointStr);
+                setTie_pointStr(savedInstanceState.getString("tie_point"));
+                setTie_point(convertoLatLon(tie_pointStr));
+                this.mHeadingDest.setText(tie_pointStr);
             }
 
         }
@@ -174,8 +176,8 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
-                            origin = curLatLon;
-                            originStr = makeLatLonStr(origin);
+                            setOrigin(curLatLon);
+                            setOriginStr(makeLatLonStr(origin));
                             mHeadingOrigin.setText(originStr);
                             updateHeading();
                             pointDroneToTrueNorth();
@@ -186,8 +188,8 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the second item gets selected
                             mHeadingOrigin.setText("");
                             updateDroneLatLon();
-                            origin = droneLatLon;
-                            originStr = makeLatLonStr(origin);
+                            setOrigin(droneLatLon);
+                            setOriginStr(makeLatLonStr(origin));
                             mHeadingOrigin.setText(originStr);
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
@@ -221,8 +223,8 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
-                            tie_point = curLatLon;
-                            tie_pointStr = makeLatLonStr(tie_point);
+                            setTie_point(curLatLon);
+                            setTie_pointStr(makeLatLonStr(tie_point));
                             mHeadingDest.setText(tie_pointStr);
                             updateHeading();
                             pointDroneToTrueNorth();
@@ -234,8 +236,8 @@ public class Heading extends DialogFragment {
                             // Whatever you want to happen when the second item gets selected
                             mHeadingDest.setText("");
                             updateDroneLatLon();
-                            tie_point = droneLatLon;
-                            tie_pointStr = makeLatLonStr(tie_point);
+                            setTie_point(droneLatLon);
+                            setTie_pointStr(makeLatLonStr(tie_point));
                             mHeadingDest.setText(tie_pointStr);
                             updateHeading();
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
@@ -263,8 +265,8 @@ public class Heading extends DialogFragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH
                         || i == EditorInfo.IME_ACTION_NEXT
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    origin = convertoLatLon(textView.getText().toString());
-                    originStr = makeLatLonStr(origin);
+                    setOrigin(convertoLatLon(textView.getText().toString()));
+                    setOriginStr(makeLatLonStr(origin));
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
@@ -280,8 +282,8 @@ public class Heading extends DialogFragment {
                 if (i == EditorInfo.IME_ACTION_SEARCH
                         || i == EditorInfo.IME_ACTION_DONE
                         || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
-                    tie_point = convertoLatLon(textView.getText().toString());
-                    tie_pointStr = makeLatLonStr(tie_point);
+                    setTie_point(convertoLatLon(textView.getText().toString()));
+                    setTie_pointStr(makeLatLonStr(tie_point));
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
@@ -304,6 +306,8 @@ public class Heading extends DialogFragment {
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
                 mOnInputListener.sendInput(origin, tie_point, headingCalc);
+//                ((MapsActivity) getActivity()).setHeadingDest(tie_point);
+//                ((MapsActivity) getActivity()).setHeadingOrg(origin);
                 getDialog().dismiss();
             }
         });
@@ -312,25 +316,24 @@ public class Heading extends DialogFragment {
         return view;
     }
 
-//    @Override
-//    public void onSaveInstanceState(Bundle outState) {
-//        super.onSaveInstanceState(outState);
-//        outState.putString("origin", originStr);
-//        outState.putString("tie_point", tie_pointStr);
-//    }
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("origin", originStr);
+        outState.putString("tie_point", tie_pointStr);
+    }
 
     private void updateHeading() {
         try {
             double heading = getHeading(origin, tie_point);
-            mHeading.setText(" Heading: " + heading);
+            this.mHeading.setText(" Heading: " + heading);
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "updateHeading - NullPointer", Toast.LENGTH_SHORT).show();
         }
     }
 
     private double getHeading(LatLng o, LatLng dest) {
-        headingCalc = computeHeading(origin, tie_point);
-        ;
+        setHeadingCalc(computeHeading(origin, tie_point));
         return headingCalc;
     }
 
@@ -351,27 +354,26 @@ public class Heading extends DialogFragment {
         return null;
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        try {
-            mOnInputListener = (onInputListener) getActivity();
-        } catch (ClassCastException e) {
-            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        try {
+//            mOnInputListener = (onInputListener) getActivity();
+//        } catch (ClassCastException e) {
+//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+//        }
+//    }
 
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;
         double lon = ll.longitude;
-        String out = lat + "," + lon;
-        return out;
+        return lat + "," + lon;
     }
 
     private void useCurrentLocationForHeading() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        hFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
+        this.hFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getContext());
 
 
         try {
@@ -387,7 +389,7 @@ public class Heading extends DialogFragment {
                             Location currentLocation = (Location) task.getResult();
                             Double curlat = currentLocation.getLatitude();
                             Double curlon = currentLocation.getLongitude();
-                            curLatLon = new LatLng(curlat, curlon);
+                            setCurLatLon(new LatLng(curlat, curlon));
                         } else {
                             Log.d(TAG, "onComplete: current location is null");
                             Toast.makeText(getContext(), "unable to get current location", Toast.LENGTH_SHORT).show();
@@ -416,20 +418,22 @@ public class Heading extends DialogFragment {
 
     private void updateDroneLatLon() {
         if (isFlightControllerSupported()) {
-            mFlightController.setStateCallback(new FlightControllerState.Callback() {
+            this.mFlightController.setStateCallback(new FlightControllerState.Callback() {
                 @Override
                 public void onUpdate(FlightControllerState
                                              djiFlightControllerCurrentState) {
-                    droneLocationLat = djiFlightControllerCurrentState.getAircraftLocation().getLatitude();
-                    droneLocationLng = djiFlightControllerCurrentState.getAircraftLocation().getLongitude();
-                    LatLng droneloc = new LatLng(droneLocationLat, droneLocationLng);
-                    droneLatLon = droneloc;
+                    setDroneLocationLat(djiFlightControllerCurrentState.getAircraftLocation().getLatitude());
+                    setDroneLocationLng(djiFlightControllerCurrentState.getAircraftLocation().getLongitude());
+                    setDroneLatLon(new LatLng(droneLocationLat, droneLocationLng));
                 }
             });
         } else {
             Toast.makeText(getContext(), "FlightControllerNotSupported", Toast.LENGTH_SHORT).show();
         }
     }
+
+
+    //ACTUAL GIMBAL AND FLIGHT ROTATE COMMANDS
 
     private void pointGimbalToTiePoint() {
         try {
@@ -541,5 +545,43 @@ public class Heading extends DialogFragment {
 
     }
 
+
+    //ALL THE GETTERS AND SETTERS
+
+    public static void setOrigin(LatLng origin) {
+        Heading.origin = origin;
+    }
+
+    public static void setTie_point(LatLng tie_point) {
+        Heading.tie_point = tie_point;
+    }
+
+    public void setOriginStr(String originStr) {
+        this.originStr = originStr;
+    }
+
+    public void setTie_pointStr(String tie_pointStr) {
+        this.tie_pointStr = tie_pointStr;
+    }
+
+    public void setCurLatLon(LatLng curLatLon) {
+        this.curLatLon = curLatLon;
+    }
+
+    public void setDroneLatLon(LatLng droneLatLon) {
+        this.droneLatLon = droneLatLon;
+    }
+
+    public void setHeadingCalc(Double headingCalc) {
+        this.headingCalc = headingCalc;
+    }
+
+    public void setDroneLocationLat(double droneLocationLat) {
+        this.droneLocationLat = droneLocationLat;
+    }
+
+    public void setDroneLocationLng(double droneLocationLng) {
+        this.droneLocationLng = droneLocationLng;
+    }
 
 }

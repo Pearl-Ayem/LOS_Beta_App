@@ -50,16 +50,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Marker originMarker;
     public Marker destMarker;
 
+
+
     public LatLng headingOrg;
     public LatLng headingDest;
     public Double headingCalc;
 
     @Override
     public void sendInput(LatLng o, LatLng d, Double h) {
-        headingOrg = o;
-        headingDest = d;
-        headingCalc = h;
-        setMarkers();
+       setHeadingOrg(o);
+       setHeadingDest(d);
+       setHeadingCalc(h);
+       setMarkers();
     }
 
 
@@ -98,7 +100,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
 
-        mMap = googleMap;
+        this.mMap = googleMap;
 
         // Add a marker in UAViation and move the camera
         LatLng UAV = new LatLng(49.238074, -122.853361);
@@ -106,16 +108,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 .position(UAV).title("UAViation Aerial Solutions")
                 .icon(BitmapDescriptorFactory.fromResource(R.drawable.map_pin1));
         searchMarker = mMap.addMarker(options);
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
+        this.mMap.moveCamera(CameraUpdateFactory.newLatLng(UAV));
 
 
         getDeviceLocation();
-        mMap.setPadding(0, 200, 0, 0);
-        mMap.setMyLocationEnabled(true);
-        mMap.getUiSettings().setMyLocationButtonEnabled(true);
-        mMap.getUiSettings().setCompassEnabled(true);
-        mMap.getUiSettings().setRotateGesturesEnabled(true);
-
+        this.mMap.setPadding(0, 200, 0, 0);
+        this.mMap.setMyLocationEnabled(true);
+        this.mMap.getUiSettings().setMyLocationButtonEnabled(true);
+        this.mMap.getUiSettings().setCompassEnabled(true);
+        this.mMap.getUiSettings().setRotateGesturesEnabled(true);
 
         init();
 
@@ -124,7 +125,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void init() {
         Log.d(TAG, "init: initializing");
 
-        mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+        this.mSearchText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int actionId, KeyEvent keyEvent) {
                 if (actionId == EditorInfo.IME_ACTION_SEARCH
@@ -173,11 +174,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             @Override
             public void onMarkerDragEnd(Marker marker) {
                 if (marker.equals(originMarker)) {
-                    headingOrg = marker.getPosition();
+                   setHeadingOrg(marker.getPosition());
                 }
 
                 if (marker.equals(destMarker)) {
-                    headingDest = marker.getPosition();
+                    setHeadingDest(marker.getPosition());
                 }
             }
         });
@@ -187,7 +188,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void geoLocate() {
         Log.d(TAG, "geoLocate: geolocating");
 
-        String searchString = mSearchText.getText().toString();
+        String searchString = this.mSearchText.getText().toString();
 
         Geocoder geocoder = new Geocoder(MapsActivity.this);
         List<Address> list = new ArrayList<>();
@@ -211,7 +212,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void getDeviceLocation() {
         Log.d(TAG, "getDeviceLocation: getting the devices current location");
 
-        mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
+        this.mFusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this);
 
 
         try {
@@ -244,11 +245,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void moveCamera(LatLng latLng, float zoom, String t) {
         Log.d(TAG, "moveCamera: moving the camera to: lat: " + latLng.latitude + ", lng: " + latLng.longitude);
-        mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
+        this.mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(latLng, zoom));
 
         if (!t.equals("My Location")) {
             MarkerOptions options = new MarkerOptions().position(latLng).title(t);
-            mMap.addMarker(options);
+            this.mMap.addMarker(options);
         }
 
         hideSoftKeyboard();
@@ -262,20 +263,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (headingDest != null && headingOrg != null) {
 
             if (originMarker != null) {
-                originMarker.remove();
+                this.originMarker.remove();
             }
 
             if (destMarker != null) {
-                destMarker.remove();
+                this.destMarker.remove();
             }
 
             MarkerOptions originMarkerOptions = new MarkerOptions().position(headingOrg).title("Origin")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).draggable(true);
-            originMarker = mMap.addMarker(originMarkerOptions);
+            this.originMarker = mMap.addMarker(originMarkerOptions);
 
 
             MarkerOptions destMarkerOptions = new MarkerOptions().position(headingDest).title("Tie-Point").draggable(true);
-            destMarker = mMap.addMarker(destMarkerOptions);
+            this.destMarker = mMap.addMarker(destMarkerOptions);
         } else {
             //do nothing
         }
@@ -285,8 +286,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng getHeadingOrg() {
         return headingOrg;
     }
-
     public LatLng getHeadingDest() {
         return headingDest;
+    }
+    public void setHeadingOrg(LatLng headingOrg) {
+        this.headingOrg = headingOrg;
+    }
+    public void setHeadingDest(LatLng headingDest) {
+        this.headingDest = headingDest;
+    }
+    public Double getHeadingCalc() {
+        return headingCalc;
+    }
+    public void setHeadingCalc(Double headingCalc) {
+        this.headingCalc = headingCalc;
     }
 }
