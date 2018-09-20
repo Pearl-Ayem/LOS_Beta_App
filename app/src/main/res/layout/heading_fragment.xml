@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/background_blue"
     tools:context="com.dji.uxsdkdemo.MapsActivity">
 
     <RelativeLayout
@@ -11,17 +11,19 @@
         android:layout_height="250dp"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
+        android:backgroundTint="@color/black_transparent"
         android:padding="10dp">
 
         <TextView
             android:id="@+id/title"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_alignParentStart="true"
+            android:layout_alignEnd="@+id/dest"
             android:layout_alignParentTop="true"
+            android:layout_marginEnd="27dp"
             android:text="@string/calculate_heading"
-            android:textColor="#000"
-            android:textSize="18sp" />
+            android:textColor="@color/offline_divider_gray"
+            android:textSize="20sp" />
 
         <AutoCompleteTextView
             android:id="@+id/origin"
@@ -33,7 +35,7 @@
             android:imeOptions="actionNext"
             android:inputType="text"
             android:maxLines="1"
-            android:textColor="#000"
+            android:textColor="@color/reply_yellow"
             android:textSize="15sp" />
 
         <Spinner
@@ -42,7 +44,6 @@
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_below="@+id/title"
-            android:background="@color/common_google_signin_btn_text_light_default"
             android:padding="5dp"
             android:src="@drawable/more_options" />
 
@@ -51,14 +52,14 @@
             android:id="@+id/dest"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_below="@+id/origin"
             android:layout_marginStart="11dp"
             android:layout_toEndOf="@+id/more_options_dest"
             android:hint="@string/heading_destination_hint"
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
-            android:textColor="#000"
+            android:textColor="#FFF"
             android:textSize="15sp" />
 
         <Spinner
@@ -67,7 +68,6 @@
             android:layout_height="30dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:background="@color/black_transparent"
             android:padding="5dp"
             android:src="@drawable/more_options" />
 
@@ -78,7 +78,9 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/dest"
             android:layout_marginTop="11dp"
-            android:text="@string/heading_hint" />
+            android:text="@string/heading_hint"
+            android:textColor="@color/reply_yellow"
+            android:textSize="16sp"/>
 
         <TextView
             android:id="@+id/action_ok"
@@ -88,7 +90,7 @@
             android:layout_alignParentEnd="true"
             android:layout_marginEnd="20dp"
             android:text="@string/ok"
-            android:textColor="#33bbff"
+            android:textColor="@color/offline_divider_gray"
             android:textSize="18sp" />
 
         <TextView
@@ -99,11 +101,10 @@
             android:layout_alignParentStart="true"
             android:layout_marginEnd="20dp"
             android:text="@string/cancel"
-            android:textColor="#33bbff"
+            android:textColor="@color/offline_divider_gray"
             android:textSize="18sp" />
 
     </RelativeLayout>
-
 
 
 </RelativeLayout>

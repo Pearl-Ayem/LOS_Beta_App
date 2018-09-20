@@ -3,7 +3,9 @@
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
-    <color name="background_blue">#242d34</color>
-    <color name="transparent">#00000000</color>
-    <color name="dark_gray">#80000000</color>
+    <color name="background_blue">#202b30</color>
+    <color name="cool_grey_blue">#344955</color>
+    <color name="reply_blue">#4a5f6b</color>
+    <color name="reply_yellow">#f9aa33</color>
+
 </resources>

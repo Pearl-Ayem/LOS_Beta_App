@@ -22,7 +22,7 @@
             android:layout_height="15dp"
             android:layout_centerVertical="true"
             android:layout_marginStart="10dp"
-            android:src="@drawable/ic_magnify" />
+            android:src="@drawable/yellow_search" />
 
         <EditText
             android:id="@+id/input_search"
@@ -64,7 +64,7 @@
             android:layout_marginTop="15dp"
             android:background="@drawable/white_border_translucent"
             android:elevation="10dp"
-            android:src="@drawable/ic_map_types" />
+            android:src="@drawable/yellow_map_layers" />
 
         <ImageButton
             android:id="@+id/ic_heading_launcher"
@@ -77,7 +77,7 @@
             android:background="@drawable/white_border_translucent"
             android:elevation="10dp"
             android:onClick="showDialog"
-            android:src="@drawable/launch_heading_radar_26" />
+            android:src="@drawable/yellow_heading" />
 
     </RelativeLayout>
 
