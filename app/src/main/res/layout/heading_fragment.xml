@@ -45,6 +45,7 @@
             android:layout_alignParentStart="true"
             android:layout_below="@+id/title"
             android:padding="5dp"
+            android:popupBackground="@color/cool_grey_blue"
             android:src="@drawable/more_options" />
 
 
@@ -69,6 +70,7 @@
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
             android:padding="5dp"
+            android:popupBackground="@color/cool_grey_blue"
             android:src="@drawable/more_options" />
 
         <TextView
