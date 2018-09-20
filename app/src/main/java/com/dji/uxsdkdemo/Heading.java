@@ -67,6 +67,8 @@ public class Heading extends DialogFragment {
     private Gimbal gimbal = null;
 
 
+
+
     private static LatLng origin;
     private String originStr;
     private static LatLng tie_point;
@@ -78,8 +80,9 @@ public class Heading extends DialogFragment {
     private double droneLocationLat = 181, droneLocationLng = 181;
     private FlightController mFlightController = null;
     private static String BASE_LOCATION = "Use Current Location";
+    private static String SELECT_LOCATION = "Select one";
     private static String DRONE_LOCATION = "Use Drone Location";
-    private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
+    private static final String[] dropdown = new String[]{SELECT_LOCATION,BASE_LOCATION, DRONE_LOCATION};
 
 
     //====================================================================================================
@@ -111,14 +114,13 @@ public class Heading extends DialogFragment {
         if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
             //fragment created for the first time
             pointDroneToTrueNorth();
-
         } else {
             setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
-            setOriginStr(makeLatLonStr(origin));
+            setOriginStr(makeLatLonStr(getOrigin()));
             this.mHeadingOrigin.setText(originStr);
 
             setTie_point(((MapsActivity) getActivity()).getHeadingDest());
-            setTie_pointStr(makeLatLonStr(tie_point));
+            setTie_pointStr(makeLatLonStr(getTie_point()));
             this.mHeadingDest.setText(tie_pointStr);
         }
         updateHeading();
@@ -126,6 +128,7 @@ public class Heading extends DialogFragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         originSpinner.setAdapter(adapter);
+//        originSpinner.setSelection(0);
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -133,6 +136,10 @@ public class Heading extends DialogFragment {
                 try {
                     switch (position) {
                         case 0:
+                            //default do nothing case
+                            break;
+
+                        case 1:
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
@@ -142,9 +149,9 @@ public class Heading extends DialogFragment {
                             updateHeading();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
-
                             break;
-                        case 1:
+
+                        case 2:
                             // Whatever you want to happen when the second item gets selected
                             mHeadingOrigin.setText("");
                             updateDroneLatLon();
@@ -155,10 +162,6 @@ public class Heading extends DialogFragment {
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
-                            break;
-
-                        case 2:
-                            //empty case do nothing
                             break;
                     }
 
@@ -177,13 +180,19 @@ public class Heading extends DialogFragment {
 
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+//        destSpinner.setSelection(0);
         destSpinner.setAdapter(adapter2);
         destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
                 try {
                     switch (position) {
+
                         case 0:
+                            //empty case do nothing
+                            break;
+
+                        case 1:
                             // Whatever you want to happen when the first item gets selected
 
                             useCurrentLocationForHeading();
@@ -195,7 +204,7 @@ public class Heading extends DialogFragment {
                             pointGimbalToTiePoint();
 
                             break;
-                        case 1:
+                        case 2:
 
                             // Whatever you want to happen when the second item gets selected
                             mHeadingDest.setText("");
@@ -207,10 +216,6 @@ public class Heading extends DialogFragment {
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
-                            break;
-
-                        case 2:
-                            //empty case do nothing
                             break;
                     }
 
@@ -273,7 +278,9 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-                mOnInputListener.sendInput(origin, tie_point, headingCalc);
+                ((MapsActivity) getActivity()).setHeadingOrg(getOrigin());
+                ((MapsActivity) getActivity()).setHeadingDest(getTie_point());
+                mOnInputListener.sendInput(getOrigin(), getTie_point(), getHeadingCalc());
                 getDialog().dismiss();
             }
         });
@@ -511,6 +518,17 @@ public class Heading extends DialogFragment {
     //====================================================================================================
 
     //ALL THE GETTERS AND SETTERS
+    public static LatLng getOrigin() {
+        return origin;
+    }
+
+    public static LatLng getTie_point() {
+        return tie_point;
+    }
+
+    public Double getHeadingCalc() {
+        return headingCalc;
+    }
 
     public static void setOrigin(LatLng origin) {
         Heading.origin = origin;

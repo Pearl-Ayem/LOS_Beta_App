@@ -56,6 +56,7 @@ dependencies {
     implementation 'com.android.support:multidex:1.0.1'
     implementation 'com.dji:dji-uxsdk:4.5.1'
     compileOnly 'com.dji:dji-sdk-provided:4.5.1'
+    compile 'org.jetbrains:annotations-java5:15.0'
 }
 
 
