@@ -57,8 +57,8 @@
 
         <ImageButton
             android:id="@+id/ic_mapTypes"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentTop="true"
             android:layout_alignStart="@+id/ic_heading_launcher"
             android:layout_marginTop="15dp"
@@ -68,8 +68,8 @@
 
         <ImageButton
             android:id="@+id/ic_heading_launcher"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
             android:layout_alignParentEnd="true"
             android:layout_below="@+id/ic_mapTypes"
             android:layout_marginEnd="12dp"

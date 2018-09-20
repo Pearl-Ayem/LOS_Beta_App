@@ -128,7 +128,8 @@ public class Heading extends DialogFragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         originSpinner.setAdapter(adapter);
-//        originSpinner.setSelection(0);
+        originSpinner.setSelection(0);
+        adapter.setDropDownViewResource(R.layout.spin_item);
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -180,8 +181,9 @@ public class Heading extends DialogFragment {
 
 
         ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
-//        destSpinner.setSelection(0);
+        destSpinner.setSelection(0);
         destSpinner.setAdapter(adapter2);
+        adapter2.setDropDownViewResource(R.layout.spin_item);
         destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {

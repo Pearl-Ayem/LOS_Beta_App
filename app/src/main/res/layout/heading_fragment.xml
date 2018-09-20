@@ -59,7 +59,7 @@
             android:imeOptions="actionDone"
             android:inputType="text"
             android:maxLines="1"
-            android:textColor="#FFF"
+            android:textColor="@color/reply_yellow"
             android:textSize="15sp" />
 
         <Spinner
