@@ -52,11 +52,11 @@ import static com.google.maps.android.SphericalUtil.computeHeading;
 public class Heading extends DialogFragment {
     private static final String TAG = "Heading Fragment";
 
-//    public interface onInputListener {
-//        void sendInput(LatLng o, LatLng d, Double h);
-//    }
-//
-//    public onInputListener mOnInputListener;
+    public interface onInputListener {
+        void sendInput(LatLng o, LatLng d, Double h);
+    }
+
+    public onInputListener mOnInputListener;
     private FusedLocationProviderClient hFusedLocationProviderClient;
 
 
@@ -71,16 +71,20 @@ public class Heading extends DialogFragment {
     private String originStr;
     private static LatLng tie_point;
     private String tie_pointStr;
-
-
     private LatLng curLatLon;
     private LatLng droneLatLon;
     private Double headingCalc;
+
     private double droneLocationLat = 181, droneLocationLng = 181;
     private FlightController mFlightController = null;
     private static String BASE_LOCATION = "Use Current Location";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{BASE_LOCATION, DRONE_LOCATION};
+
+
+    //====================================================================================================
+
+    //DATA AND STRUCTURE COMMANDS
 
 
     @Nullable
@@ -107,33 +111,16 @@ public class Heading extends DialogFragment {
         if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
             //fragment created for the first time
             pointDroneToTrueNorth();
+
         } else {
-            if (((MapsActivity) getActivity()).getHeadingOrg() != null) {
-                setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
-                setOriginStr(makeLatLonStr(origin));
-                this.mHeadingOrigin.setText(originStr);
-            }
+            setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
+            setOriginStr(makeLatLonStr(origin));
+            this.mHeadingOrigin.setText(originStr);
 
-            else {
-                setOriginStr(savedInstanceState.getString("origin"));
-                setOrigin(convertoLatLon(originStr));
-                this.mHeadingOrigin.setText(originStr);
-            }
-
-            if (((MapsActivity) getActivity()).getHeadingDest() != null) {
-                setTie_point(((MapsActivity) getActivity()).getHeadingDest());
-                setTie_pointStr(makeLatLonStr(tie_point));
-                this.mHeadingDest.setText(tie_pointStr);
-            }
-
-            else {
-                setTie_pointStr(savedInstanceState.getString("tie_point"));
-                setTie_point(convertoLatLon(tie_pointStr));
-                this.mHeadingDest.setText(tie_pointStr);
-            }
-
+            setTie_point(((MapsActivity) getActivity()).getHeadingDest());
+            setTie_pointStr(makeLatLonStr(tie_point));
+            this.mHeadingDest.setText(tie_pointStr);
         }
-
         updateHeading();
 
 
@@ -168,6 +155,10 @@ public class Heading extends DialogFragment {
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(origin), Toast.LENGTH_SHORT).show();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
+                            break;
+
+                        case 2:
+                            //empty case do nothing
                             break;
                     }
 
@@ -216,6 +207,10 @@ public class Heading extends DialogFragment {
                             Toast.makeText(getContext(), "Drone Location Selected: " + makeLatLonStr(tie_point), Toast.LENGTH_SHORT).show();
                             pointDroneToTrueNorth();
                             pointGimbalToTiePoint();
+                            break;
+
+                        case 2:
+                            //empty case do nothing
                             break;
                     }
 
@@ -278,14 +273,7 @@ public class Heading extends DialogFragment {
             @Override
             public void onClick(View v) {
                 Log.d(TAG, "onClick: capturing input");
-                Bundle fragmentToActivityOutput = new Bundle();
-                fragmentToActivityOutput.putString("origin", originStr);
-                fragmentToActivityOutput.putString("tie-point", tie_pointStr);
-
-                Intent fToAIntent = new Intent(getActivity(), MapsActivity.class);
-                fToAIntent.putExtras(fragmentToActivityOutput);
-//                startActivity(fToAIntent);
-//                mOnInputListener.sendInput(origin, tie_point, headingCalc);
+                mOnInputListener.sendInput(origin, tie_point, headingCalc);
                 getDialog().dismiss();
             }
         });
@@ -320,22 +308,22 @@ public class Heading extends DialogFragment {
             double lat = Double.parseDouble(latlonString[0]);
             double lon = Double.parseDouble(latlonString[1]);
             return new LatLng(lat, lon);
-        }  catch (NumberFormatException e) {
+        } catch (NumberFormatException e) {
             //do nothing
         }
 
         return null;
     }
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        try {
-//            mOnInputListener = (onInputListener) getActivity();
-//        } catch (ClassCastException e) {
-//            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
-//        }
-//    }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        try {
+            mOnInputListener = (onInputListener) getActivity();
+        } catch (ClassCastException e) {
+            Log.e(TAG, "onAttach: ClassCastException: " + e.getMessage());
+        }
+    }
 
     public String makeLatLonStr(LatLng ll) {
         double lat = ll.latitude;
@@ -405,6 +393,8 @@ public class Heading extends DialogFragment {
         }
     }
 
+
+    //====================================================================================================
 
     //ACTUAL GIMBAL AND FLIGHT ROTATE COMMANDS
 
@@ -517,6 +507,8 @@ public class Heading extends DialogFragment {
 
     }
 
+
+    //====================================================================================================
 
     //ALL THE GETTERS AND SETTERS
 
