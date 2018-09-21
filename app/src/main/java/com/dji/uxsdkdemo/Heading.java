@@ -67,8 +67,6 @@ public class Heading extends DialogFragment {
     private Gimbal gimbal = null;
 
 
-
-
     private static LatLng origin;
     private String originStr;
     private static LatLng tie_point;
@@ -82,7 +80,7 @@ public class Heading extends DialogFragment {
     private static String BASE_LOCATION = "Use Current Location";
     private static String SELECT_LOCATION = "Select one";
     private static String DRONE_LOCATION = "Use Drone Location";
-    private static final String[] dropdown = new String[]{SELECT_LOCATION,BASE_LOCATION, DRONE_LOCATION};
+    private static final String[] dropdown = new String[]{SELECT_LOCATION, BASE_LOCATION, DRONE_LOCATION};
 
 
     //====================================================================================================
@@ -128,7 +126,7 @@ public class Heading extends DialogFragment {
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         originSpinner.setAdapter(adapter);
-//        adapter.setDropDownViewResource(R.layout.spin_item);
+        originSpinner.setSelection(0);
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -179,10 +177,9 @@ public class Heading extends DialogFragment {
         });
 
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
-//        destSpinner.setSelection(0);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        destSpinner.setSelection(0);
         destSpinner.setAdapter(adapter2);
-//        adapter2.setDropDownViewResource(R.layout.spin_item);
         destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
