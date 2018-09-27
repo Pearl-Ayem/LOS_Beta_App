@@ -57,13 +57,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public Double headingCalc;
 
 
-
     @Override
     public void sendInput(LatLng o, LatLng d, Double h) {
-       setHeadingOrg(o);
-       setHeadingDest(d);
-       setHeadingCalc(h);
-       setMarkers();
+        setHeadingOrg(o);
+        setHeadingDest(d);
+        setHeadingCalc(h);
+        setMarkers();
     }
 
 
@@ -83,7 +82,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
 
     }
-
 
 
     /**
@@ -264,23 +262,24 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void setMarkers() {
-        if (headingDest != null && headingOrg != null) {
 
-            if (originMarker != null) {
-                this.originMarker.remove();
-            }
+        if (destMarker != null) {
+            this.destMarker.remove();
+        }
 
-            if (destMarker != null) {
-                this.destMarker.remove();
-            }
+        if (originMarker != null) {
+            this.originMarker.remove();
+        }
 
+        if (headingDest != null) {
+            MarkerOptions destMarkerOptions = new MarkerOptions().position(headingDest).title("Tie-Point").draggable(true);
+            this.destMarker = mMap.addMarker(destMarkerOptions);
+        }
+
+        if (headingOrg != null) {
             MarkerOptions originMarkerOptions = new MarkerOptions().position(headingOrg).title("Origin")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_CYAN)).draggable(true);
             this.originMarker = mMap.addMarker(originMarkerOptions);
-
-
-            MarkerOptions destMarkerOptions = new MarkerOptions().position(headingDest).title("Tie-Point").draggable(true);
-            this.destMarker = mMap.addMarker(destMarkerOptions);
         }
     }
 
@@ -292,16 +291,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public LatLng getHeadingOrg() {
         return headingOrg;
     }
+
     public LatLng getHeadingDest() {
         return headingDest;
     }
+
     public void setHeadingOrg(LatLng headingOrg) {
         this.headingOrg = headingOrg;
     }
+
     public void setHeadingDest(LatLng headingDest) {
         this.headingDest = headingDest;
     }
+
     public void setHeadingCalc(Double headingCalc) {
         this.headingCalc = headingCalc;
     }
-    }
+}

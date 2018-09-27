@@ -1,4 +1,5 @@
 package com.dji.uxsdkdemo;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -21,11 +22,13 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.gimbal.GimbalMode;
@@ -37,6 +40,7 @@ import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.gimbal.Gimbal;
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
+
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
 /**
@@ -113,10 +117,10 @@ public class Heading extends DialogFragment {
         updateHeading();
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_view_res, dropdown);
-//        adapter.setDropDownViewResource(R.layout.spinner_view_res);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        adapter.setDropDownViewResource(R.layout.spinner_view_res);
         originSpinner.setAdapter(adapter);
-        originSpinner.setSelection(0);
+        originSpinner.setSelection(adapter.getPosition("Select one"));
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long l) {
@@ -167,9 +171,9 @@ public class Heading extends DialogFragment {
         });
 
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(),R.layout.spinner_view_res, dropdown);
-//        adapter2.setDropDownViewResource(R.layout.spinner_view_res);
-        destSpinner.setSelection(0);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        adapter2.setDropDownViewResource(R.layout.spinner_view_res);
+        destSpinner.setSelection(adapter2.getPosition("Select one"));
         destSpinner.setAdapter(adapter2);
         destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -224,9 +228,7 @@ public class Heading extends DialogFragment {
         mHeadingOrigin.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH
-                        || i == EditorInfo.IME_ACTION_NEXT
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                if (i == EditorInfo.IME_ACTION_NEXT || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     setOrigin(convertoLatLon(textView.getText().toString()));
                     setOriginStr(makeLatLonStr(origin));
                     updateHeading();
@@ -241,9 +243,7 @@ public class Heading extends DialogFragment {
         mHeadingDest.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int i, KeyEvent keyEvent) {
-                if (i == EditorInfo.IME_ACTION_SEARCH
-                        || i == EditorInfo.IME_ACTION_DONE
-                        || keyEvent.getAction() == KeyEvent.KEYCODE_ENTER) {
+                if (i == EditorInfo.IME_ACTION_DONE || keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
                     setTie_point(convertoLatLon(textView.getText().toString()));
                     setTie_pointStr(makeLatLonStr(tie_point));
                     updateHeading();
