@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     tools:context="com.dji.uxsdkdemo.MapsActivity">
 
     <RelativeLayout
@@ -23,27 +23,33 @@
 
         <ImageButton
             android:id="@+id/defaultMapType"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="3dp"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/default_map_icon" />
+            android:background="@null"
+            android:src="@drawable/default_map_yellow" />
 
         <ImageButton
             android:id="@+id/satelliteMapType"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="3dp"
             android:layout_centerVertical="true"
             android:layout_centerHorizontal="true"
-            android:src="@drawable/satellite_map" />
+            android:background="@null"
+            android:src="@drawable/satellite_map_type_grey" />
 
         <ImageButton
             android:id="@+id/terrainMapType"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="3dp"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:src="@drawable/terrain_map_icon" />
+            android:background="@null"
+            android:src="@drawable/terrain_map_grey" />
 
         <TextView
             android:id="@+id/defaultMap"

@@ -13,6 +13,13 @@ import android.widget.ImageButton;
 import com.dji.mapkit.maps.DJIMap;
 import com.google.android.gms.maps.GoogleMap;
 
+import static com.dji.uxsdkdemo.R.drawable.default_map_grey;
+import static com.dji.uxsdkdemo.R.drawable.default_map_yellow;
+import static com.dji.uxsdkdemo.R.drawable.satellite_map_type_grey;
+import static com.dji.uxsdkdemo.R.drawable.satellite_map_type_yellow;
+import static com.dji.uxsdkdemo.R.drawable.terrain_map_grey;
+import static com.dji.uxsdkdemo.R.drawable.terrain_map_yellow;
+
 /**
  * Created by Pearl on 2018-07-31.
  */
@@ -38,6 +45,9 @@ public class MapTypeDialog extends DialogFragment {
             @Override
             public void onClick(View view) {
                 int type = GoogleMap.MAP_TYPE_NORMAL;
+                defaultMap.setImageResource(default_map_yellow);
+                terrainMap.setImageResource(terrain_map_grey);
+                satelliteMap.setImageResource(satellite_map_type_grey);
                 MapsActivity.mMap.setMapType(type);
             }
         });
@@ -45,6 +55,9 @@ public class MapTypeDialog extends DialogFragment {
         satelliteMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                defaultMap.setImageResource(default_map_grey);
+                terrainMap.setImageResource(terrain_map_grey);
+                satelliteMap.setImageResource(satellite_map_type_yellow);
                 MapsActivity.mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             }
         });
@@ -52,6 +65,9 @@ public class MapTypeDialog extends DialogFragment {
         terrainMap.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                defaultMap.setImageResource(default_map_grey);
+                terrainMap.setImageResource(terrain_map_yellow);
+                satelliteMap.setImageResource(satellite_map_type_grey);
                 MapsActivity.mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
             }
         });

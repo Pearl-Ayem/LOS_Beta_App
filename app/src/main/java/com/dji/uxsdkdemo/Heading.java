@@ -283,7 +283,7 @@ public class Heading extends DialogFragment {
         outState.putString("tie_point", this.tie_pointStr);
     }
 
-    private void updateHeading() {
+    private void  updateHeading() {
         try {
             double heading = getHeading(origin, tie_point);
             this.mHeading.setText(" Heading: " + heading);
