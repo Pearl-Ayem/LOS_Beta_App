@@ -67,7 +67,7 @@
             android:layout_below="@+id/satelliteMapType"
             android:layout_centerHorizontal="true"
             android:text="@string/satellite"
-            android:textColor="@color/reply_yellow"
+            android:textColor="@color/pallett_gray"
             android:textSize="12sp" />
 
         <TextView
@@ -76,7 +76,7 @@
             android:layout_height="wrap_content"
             android:layout_alignStart="@+id/terrainMapType"
             android:layout_below="@+id/terrainMapType"
-            android:textColor="@color/reply_yellow"
+            android:textColor="@color/pallett_gray"
             android:textSize="12sp"
             android:text="@string/map_type_terrain" />
 

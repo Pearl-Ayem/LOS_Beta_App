@@ -4,8 +4,9 @@
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="background_blue">#202b30</color>
-    <color name="cool_grey_blue">#344955</color>
+    <color name="primary_blue">#344955</color>
     <color name="reply_blue">#4a5f6b</color>
     <color name="reply_yellow">#f9aa33</color>
+    <color name="pallett_gray">#4A6572</color>
 
 </resources>
