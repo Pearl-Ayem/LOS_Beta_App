@@ -36,6 +36,8 @@ public class MapTypeDialog extends DialogFragment {
     private TextView defaultText;
     private TextView satelliteText;
     private TextView terrainText;
+    int yellow;
+    int gray;
 
     @Nullable
     @Override
@@ -48,48 +50,43 @@ public class MapTypeDialog extends DialogFragment {
         defaultText = view.findViewById(R.id.defaultMap);
         satelliteText = view.findViewById(R.id.satelliteMap);
         terrainText = view.findViewById(R.id.terrainMap);
+        yellow = getResources().getColor(R.color.reply_yellow);
+        gray = getResources().getColor(R.color.pallett_gray);
+
 
         defaultMap.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
             public void onClick(View view) {
                 int type = GoogleMap.MAP_TYPE_NORMAL;
                 defaultMap.setImageResource(default_map_yellow);
                 terrainMap.setImageResource(terrain_map_grey);
                 satelliteMap.setImageResource(satellite_map_type_grey);
-
-                defaultText.setTextColor(R.color.reply_yellow);
-                terrainText.setTextColor(R.color.pallett_gray);
-                satelliteText.setTextColor(R.color.pallett_gray);
+                defaultText.setTextColor(yellow);
+                terrainText.setTextColor(gray);
+                satelliteText.setTextColor(gray);
                 MapsActivity.mMap.setMapType(type);
             }
         });
 
         satelliteMap.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
             public void onClick(View view) {
                 defaultMap.setImageResource(default_map_grey);
                 terrainMap.setImageResource(terrain_map_grey);
                 satelliteMap.setImageResource(satellite_map_type_yellow);
-                defaultText.setTextColor(R.color.pallett_gray);
-                terrainText.setTextColor(R.color.pallett_gray);
-                satelliteText.setTextColor(R.color.reply_yellow);
-
+                defaultText.setTextColor(gray);
+                terrainText.setTextColor(gray);
+                satelliteText.setTextColor(yellow);
                 MapsActivity.mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
             }
         });
 
         terrainMap.setOnClickListener(new View.OnClickListener() {
-            @SuppressLint("ResourceAsColor")
-            @Override
             public void onClick(View view) {
                 defaultMap.setImageResource(default_map_grey);
                 terrainMap.setImageResource(terrain_map_yellow);
                 satelliteMap.setImageResource(satellite_map_type_grey);
-                defaultText.setTextColor(R.color.pallett_gray);
-                terrainText.setTextColor(R.color.reply_yellow);
-                satelliteText.setTextColor(R.color.pallett_gray);
+                defaultText.setTextColor(gray);
+                terrainText.setTextColor(yellow);
+                satelliteText.setTextColor(gray);
                 MapsActivity.mMap.setMapType(GoogleMap.MAP_TYPE_TERRAIN);
             }
         });
