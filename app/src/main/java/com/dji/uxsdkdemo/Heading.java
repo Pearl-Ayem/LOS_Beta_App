@@ -305,10 +305,8 @@ public class Heading extends DialogFragment {
             double lon = Double.parseDouble(latlonString[1]);
             return new LatLng(lat, lon);
         } catch (NumberFormatException e) {
-            //do nothing
+            return null;
         }
-
-        return null;
     }
 
     @Override
@@ -322,9 +320,13 @@ public class Heading extends DialogFragment {
     }
 
     public String makeLatLonStr(LatLng ll) {
-        double lat = ll.latitude;
-        double lon = ll.longitude;
-        return lat + "," + lon;
+        try {
+            double lat = ll.latitude;
+            double lon = ll.longitude;
+            return lat + "," + lon;
+        } catch (NullPointerException e) {
+            return null;
+        }
     }
 
     private void useCurrentLocationForHeading() {
