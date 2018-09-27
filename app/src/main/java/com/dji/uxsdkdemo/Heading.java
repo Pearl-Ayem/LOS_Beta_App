@@ -1,5 +1,4 @@
 package com.dji.uxsdkdemo;
-
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -22,13 +21,11 @@ import android.widget.AutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
-
 import dji.common.error.DJIError;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.gimbal.GimbalMode;
@@ -38,11 +35,8 @@ import dji.common.util.CommonCallbacks;
 import dji.sdk.base.BaseProduct;
 import dji.sdk.flightcontroller.FlightController;
 import dji.sdk.gimbal.Gimbal;
-
 import dji.sdk.products.Aircraft;
 import dji.sdk.sdkmanager.DJISDKManager;
-
-import static com.dji.uxsdkdemo.ToastUtils.showToast;
 import static com.google.maps.android.SphericalUtil.computeHeading;
 
 /**
@@ -58,15 +52,11 @@ public class Heading extends DialogFragment {
 
     public onInputListener mOnInputListener;
     private FusedLocationProviderClient hFusedLocationProviderClient;
-
-
     private AutoCompleteTextView mHeadingOrigin;
     private AutoCompleteTextView mHeadingDest;
     private TextView mHeading, mActionOk, mActionCancel;
     Spinner originSpinner, destSpinner;
     private Gimbal gimbal = null;
-
-
     private static LatLng origin;
     private String originStr;
     private static LatLng tie_point;
@@ -74,7 +64,6 @@ public class Heading extends DialogFragment {
     private LatLng curLatLon;
     private LatLng droneLatLon;
     private Double headingCalc;
-
     private double droneLocationLat = 181, droneLocationLng = 181;
     private FlightController mFlightController = null;
     private static String BASE_LOCATION = "Use Current Location";
@@ -124,7 +113,8 @@ public class Heading extends DialogFragment {
         updateHeading();
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), R.layout.spinner_view_res, dropdown);
+//        adapter.setDropDownViewResource(R.layout.spinner_view_res);
         originSpinner.setAdapter(adapter);
         originSpinner.setSelection(0);
         originSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -177,7 +167,8 @@ public class Heading extends DialogFragment {
         });
 
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(),R.layout.spinner_view_res, dropdown);
+//        adapter2.setDropDownViewResource(R.layout.spinner_view_res);
         destSpinner.setSelection(0);
         destSpinner.setAdapter(adapter2);
         destSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
