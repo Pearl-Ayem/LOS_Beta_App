@@ -234,7 +234,7 @@ public class Heading extends DialogFragment {
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
-                    return true;
+                    return false;
                 }
                 return false;
             }
@@ -249,7 +249,7 @@ public class Heading extends DialogFragment {
                     updateHeading();
                     pointDroneToTrueNorth();
                     pointGimbalToTiePoint();
-                    return true;
+                    return false;
                 }
                 return false;
             }
