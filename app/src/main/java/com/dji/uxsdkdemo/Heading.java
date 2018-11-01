@@ -103,8 +103,18 @@ public class Heading extends DialogFragment {
         }
 
         if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
-            //fragment created for the first time
+            /**
+             * fragment created for the first time
+             * What this implies: BOTH heading and tie-point need to be null for pointDroneToTrueNorth() to be run
+             */
             pointDroneToTrueNorth();
+
+
+            /**
+             * ELSE case: This will run if even one of the two are not null. Usually happens if coordinates for only origin or dest are set but not both
+             * Consequence: Origin or Dest could be set as null too. (Only one of the two will be set as null however)
+             */
+
         } else {
             setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
             setOriginStr(makeLatLonStr(getOrigin()));
@@ -114,6 +124,7 @@ public class Heading extends DialogFragment {
             setTie_pointStr(makeLatLonStr(getTie_point()));
             this.mHeadingDest.setText(tie_pointStr);
         }
+
         updateHeading();
 
 
@@ -132,7 +143,10 @@ public class Heading extends DialogFragment {
                             break;
 
                         case 1:
-                            // Whatever you want to happen when the first item gets selected
+
+                            /**
+                             * Case 1: Current BASE location selected for origin
+                             */
 
                             useCurrentLocationForHeading();
                             setOrigin(curLatLon);
@@ -293,7 +307,7 @@ public class Heading extends DialogFragment {
     }
 
     private double getHeading(LatLng o, LatLng dest) {
-        setHeadingCalc(computeHeading(origin, tie_point));
+        setHeadingCalc(computeHeading(o, dest));
         return headingCalc;
     }
 
@@ -465,27 +479,46 @@ public class Heading extends DialogFragment {
     }
 
     private float getDroneHeading() {
+
+        /**
+         * returns the heading in degrees from True North (True North is 0 degrees)
+         * Positive heading -> East of North
+         * Negative Heading - West of North
+         */
         return mFlightController.getCompass().getHeading();
     }
 
     private void pointDroneToTrueNorth() {
         try {
-            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+            gimbal.setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
-                    if (error == null) {
+                    if (error.equals(null)) {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-            final float droneHeading = getDroneHeading();
+
+            float droneHeading = getDroneHeading();
+
+            /**
+             * Positive heading -> East of North
+             * Negative Heading - West of North
+             * So to point to true North if drone heading is positive turn
+             * We can rotate the drone to the negative value of the current heading to point it to true north
+             */
+
             Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
-            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
+            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE);
+
             rotateToTrueNorthBuilder.roll(0);
             rotateToTrueNorthBuilder.pitch(0);
+
             float rotateTo = droneHeading * (-1);
+
+
             Toast.makeText(getContext(), "pointToNorth - AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
             rotateToTrueNorthBuilder.yaw(rotateTo);
             gimbal.rotate(rotateToTrueNorthBuilder.build(), new CommonCallbacks.CompletionCallback() {
@@ -504,6 +537,9 @@ public class Heading extends DialogFragment {
 
 
     }
+
+
+
 
 
     //====================================================================================================
