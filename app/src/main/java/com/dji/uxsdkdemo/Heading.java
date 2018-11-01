@@ -106,17 +106,17 @@ public class Heading extends DialogFragment {
         }
 
         if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
-            /**
-             * fragment created for the first time
-             * What this implies: BOTH heading and tie-point need to be null for pointDroneToTrueNorth() to be run
-             */
+
+//             * fragment created for the first time
+//             * What this implies: BOTH heading and tie-point need to be null for pointDroneToTrueNorth() to be run
+
             pointDroneToTrueNorth();
 
 
-            /**
-             * ELSE case: This will run if even one of the two are not null. Usually happens if coordinates for only origin or dest are set but not both
-             * Consequence: Origin or Dest could be set as null too. (Only one of the two will be set as null however)
-             */
+
+//             * ELSE case: This will run if even one of the two are not null. Usually happens if coordinates for only origin or dest are set but not both
+//             * Consequence: Origin or Dest could be set as null too. (Only one of the two will be set as null however)
+
 
         } else {
             setOrigin(((MapsActivity) getActivity()).getHeadingOrg());
@@ -131,7 +131,7 @@ public class Heading extends DialogFragment {
         updateHeading();
 
 
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         adapter.setDropDownViewResource(R.layout.spinner_view_res);
         originSpinner.setAdapter(adapter);
         originSpinner.setSelection(adapter.getPosition("Select one"));
@@ -147,9 +147,12 @@ public class Heading extends DialogFragment {
 
                         case 1:
 
-                            /**
-                             * Case 1: Current BASE location selected for origin
-                             */
+
+//                             * Case 1: Current BASE location selected for origin
+//                             * Once origin is determined, calculate heading to tie-point
+//                             * Rotate drone to True North
+//                             * Rotate to tie-point
+
 
                             useCurrentLocationForHeading();
                             setOrigin(curLatLon);
@@ -161,7 +164,13 @@ public class Heading extends DialogFragment {
                             break;
 
                         case 2:
-                            // Whatever you want to happen when the second item gets selected
+
+//                             * Case 2: Current DRONE location selected for origin
+//                             * Once origin is determined, calculate heading to tie-point
+//                             * Rotate drone to True North
+//                             * Rotate to tie-point
+
+
                             mHeadingOrigin.setText("");
                             updateDroneLatLon();
                             setOrigin(droneLatLon);
@@ -188,7 +197,7 @@ public class Heading extends DialogFragment {
         });
 
 
-        ArrayAdapter<String> adapter2 = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
+        ArrayAdapter<String> adapter2 = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_dropdown_item, dropdown);
         adapter2.setDropDownViewResource(R.layout.spinner_view_res);
         destSpinner.setSelection(adapter2.getPosition("Select one"));
         destSpinner.setAdapter(adapter2);
@@ -203,7 +212,12 @@ public class Heading extends DialogFragment {
                             break;
 
                         case 1:
-                            // Whatever you want to happen when the first item gets selected
+
+//                             * Case 1: Current BASE location selected for dest
+//                             * Once origin is determined, calculate heading to tie-point
+//                             * Rotate drone to True North
+//                             * Rotate to tie-point
+
 
                             useCurrentLocationForHeading();
                             setTie_point(curLatLon);
@@ -216,7 +230,12 @@ public class Heading extends DialogFragment {
                             break;
                         case 2:
 
-                            // Whatever you want to happen when the second item gets selected
+//                             * Case 2: Current DRONE location selected for dest
+//                             * Once origin is determined, calculate heading to tie-point
+//                             * Rotate drone to True North
+//                             * Rotate to tie-point
+
+
                             mHeadingDest.setText("");
                             updateDroneLatLon();
                             setTie_point(droneLatLon);
@@ -487,11 +506,11 @@ public class Heading extends DialogFragment {
 
     private float getDroneHeading() {
 
-        /**
-         * returns the heading in degrees from True North (True North is 0 degrees)
-         * Positive heading -> East of North
-         * Negative Heading - West of North
-         */
+
+//         * returns the heading in degrees from True North (True North is 0 degrees)
+//         * Positive heading -> East of North
+//         * Negative Heading - West of North
+
         return mFlightController.getCompass().getHeading();
     }
 
@@ -500,7 +519,7 @@ public class Heading extends DialogFragment {
             gimbal.setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
-                    if (error.equals(null)) {
+                    if (error== null) {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal Mode set to FPV", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal mode cannot be set to FPV", Toast.LENGTH_SHORT).show();
@@ -509,12 +528,12 @@ public class Heading extends DialogFragment {
             });
 
 
-            /**
-             * Positive heading -> East of North
-             * Negative Heading - West of North
-             * So to point to true North if drone heading is positive turn
-             * We can rotate the drone to the negative value of the current heading to point it to true north
-             */
+
+//             * Positive heading -> East of North
+//             * Negative Heading - West of North
+//             * So to point to true North if drone heading is positive turn
+//             * We can rotate the drone to the negative value of the current heading to point it to true north
+
 
             Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + mFlightControllerState.getAttitude().yaw, Toast.LENGTH_LONG).show();
             Attitude FlightAttitude = new Attitude(0,0, 0);
