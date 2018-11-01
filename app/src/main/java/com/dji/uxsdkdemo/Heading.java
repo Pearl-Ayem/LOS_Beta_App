@@ -30,6 +30,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 
 import dji.common.error.DJIError;
+import dji.common.flightcontroller.Attitude;
 import dji.common.flightcontroller.FlightControllerState;
 import dji.common.gimbal.GimbalMode;
 import dji.common.gimbal.Rotation;
@@ -69,7 +70,9 @@ public class Heading extends DialogFragment {
     private LatLng droneLatLon;
     private Double headingCalc;
     private double droneLocationLat = 181, droneLocationLng = 181;
-    private FlightController mFlightController = null;
+    private FlightController mFlightController;
+    private FlightControllerState  mFlightControllerState;
+    private Attitude mFlightAttitude;
     private static String BASE_LOCATION = "Use Current Location";
     private static String SELECT_LOCATION = "Select one";
     private static String DRONE_LOCATION = "Use Drone Location";
@@ -501,7 +504,6 @@ public class Heading extends DialogFragment {
                 }
             });
 
-            float droneHeading = getDroneHeading();
 
             /**
              * Positive heading -> East of North
@@ -510,27 +512,28 @@ public class Heading extends DialogFragment {
              * We can rotate the drone to the negative value of the current heading to point it to true north
              */
 
-            Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
-            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE);
+            Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + mFlightControllerState.getAttitude().yaw, Toast.LENGTH_LONG).show();
+            mFlightAttitude = new Attitude(0,0, 0);
+            mFlightControllerState.setAttitude(mFlightAttitude);
 
-            rotateToTrueNorthBuilder.roll(0);
-            rotateToTrueNorthBuilder.pitch(0);
-
-            float rotateTo = droneHeading * (-1);
-
-
-            Toast.makeText(getContext(), "pointToNorth - AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
-            rotateToTrueNorthBuilder.yaw(rotateTo);
-            gimbal.rotate(rotateToTrueNorthBuilder.build(), new CommonCallbacks.CompletionCallback() {
-                @Override
-                public void onResult(DJIError djiError) {
-                    if (djiError == null) {
-                        Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + getDroneHeading(), Toast.LENGTH_LONG).show();
-                    } else {
-                        Toast.makeText(getContext(), "Drone could not be rotated to North", Toast.LENGTH_LONG).show();
-                    }
-                }
-            });
+//            float droneHeading = getDroneHeading();
+//            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE);
+//
+//            rotateToTrueNorthBuilder.roll(0);
+//            rotateToTrueNorthBuilder.pitch(0);
+//            float rotateTo = droneHeading * (-1);
+//            Toast.makeText(getContext(), "pointToNorth - AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
+//            rotateToTrueNorthBuilder.yaw(rotateTo);
+//            gimbal.rotate(rotateToTrueNorthBuilder.build(), new CommonCallbacks.CompletionCallback() {
+//                @Override
+//                public void onResult(DJIError djiError) {
+//                    if (djiError == null) {
+//                        Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + getDroneHeading(), Toast.LENGTH_LONG).show();
+//                    } else {
+//                        Toast.makeText(getContext(), "Drone could not be rotated to North", Toast.LENGTH_LONG).show();
+//                    }
+//                }
+//            });
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "pointToNorth - Gimbal is Null", Toast.LENGTH_SHORT).show();
         }
