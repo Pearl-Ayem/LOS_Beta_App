@@ -100,6 +100,8 @@ public class Heading extends DialogFragment {
 
         if (isFlightControllerSupported()) {
             mFlightController = ((Aircraft) DJISDKManager.getInstance().getProduct()).getFlightController();
+            mFlightControllerState = mFlightController.getState();
+            mFlightAttitude = mFlightControllerState.getAttitude();
         }
         if (getGimbalInstance() != null) {
             gimbal = getGimbalInstance();
@@ -534,13 +536,12 @@ public class Heading extends DialogFragment {
 //             * So to point to true North if drone heading is positive turn
 //             * We can rotate the drone to the negative value of the current heading to point it to true north
 
-
-            Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + mFlightControllerState.getAttitude().yaw, Toast.LENGTH_LONG).show();
+            float droneHeading = getDroneHeading();
+            Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
             Attitude FlightAttitude = new Attitude(0,0, 0);
             setmFlightAttitude(FlightAttitude);
             mFlightControllerState.setAttitude(mFlightAttitude);
 
-//            float droneHeading = getDroneHeading();
 //            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE);
 //
 //            rotateToTrueNorthBuilder.roll(0);
@@ -559,7 +560,7 @@ public class Heading extends DialogFragment {
 //                }
 //            });
         } catch (NullPointerException e) {
-            Toast.makeText(getContext(), "pointToNorth - Gimbal is Null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), "pointToNorth -  Null Pointer", Toast.LENGTH_SHORT).show();
         }
 
 
