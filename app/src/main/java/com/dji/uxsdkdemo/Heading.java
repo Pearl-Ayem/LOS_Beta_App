@@ -417,23 +417,27 @@ public class Heading extends DialogFragment {
         try {
             Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
 
-            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+            gimbal.setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
                     if (error == null) {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to FPV", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to FPV", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
 
-            Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
-            builder.roll(0);
-            builder.pitch(0);
+//            Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
+//            builder.roll(0);
+//            builder.pitch(0);
+//            Float newYaw = (headingCalc).floatValue();
+//            builder.yaw(newYaw);
+//            sendRotateGimbalCommand(builder.build());
             Float newYaw = (headingCalc).floatValue();
-            builder.yaw(newYaw);
-            sendRotateGimbalCommand(builder.build());
+            Attitude TurnAttitude = new Attitude(0,0,newYaw);
+            setmFlightAttitude(TurnAttitude);
+            mFlightControllerState.setAttitude(mFlightAttitude);
 
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "Null Pointer Found in pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
@@ -497,9 +501,9 @@ public class Heading extends DialogFragment {
                 @Override
                 public void onResult(DJIError error) {
                     if (error.equals(null)) {
-                        Toast.makeText(getContext(), "pointToNorth- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "pointToNorth- Gimbal Mode set to FPV", Toast.LENGTH_SHORT).show();
                     } else {
-                        Toast.makeText(getContext(), "pointToNorth- Gimbal mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), "pointToNorth- Gimbal mode cannot be set to FPV", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
@@ -513,7 +517,8 @@ public class Heading extends DialogFragment {
              */
 
             Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + mFlightControllerState.getAttitude().yaw, Toast.LENGTH_LONG).show();
-            mFlightAttitude = new Attitude(0,0, 0);
+            Attitude FlightAttitude = new Attitude(0,0, 0);
+            setmFlightAttitude(FlightAttitude);
             mFlightControllerState.setAttitude(mFlightAttitude);
 
 //            float droneHeading = getDroneHeading();
@@ -594,6 +599,14 @@ public class Heading extends DialogFragment {
 
     public void setDroneLocationLng(double droneLocationLng) {
         this.droneLocationLng = droneLocationLng;
+    }
+
+    public Attitude getmFlightAttitude() {
+        return mFlightAttitude;
+    }
+
+    public void setmFlightAttitude(Attitude mFlightAttitude) {
+        this.mFlightAttitude = mFlightAttitude;
     }
 
 }
