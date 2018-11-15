@@ -486,27 +486,27 @@ public class Heading extends DialogFragment {
         return gimbal;
     }
 
-//    private void initGimbal() {
-//        if (DJISDKManager.getInstance() != null) {
-//            BaseProduct product = DJISDKManager.getInstance().getProduct();
-//            if (product != null) {
-//                if (product instanceof Aircraft) {
-//                    gimbal = ((Aircraft) product).getGimbals().get(currentGimbalId);
-//                } else {
-//                    gimbal = product.getGimbal();
-//                }
-//            }
-//        }
-//    }
-
     private void initGimbal() {
         if (DJISDKManager.getInstance() != null) {
             BaseProduct product = DJISDKManager.getInstance().getProduct();
             if (product != null) {
-                gimbal = product.getGimbal();
+                if (product instanceof Aircraft) {
+                    gimbal = ((Aircraft) product).getGimbals().get(0);
+                } else {
+                    gimbal = product.getGimbal();
+                }
             }
         }
     }
+
+//    private void initGimbal() {
+//        if (DJISDKManager.getInstance() != null) {
+//            BaseProduct product = DJISDKManager.getInstance().getProduct();
+//            if (product != null) {
+//                gimbal = product.getGimbal();
+//            }
+//        }
+//    }
 
     private float getDroneHeading() {
 
