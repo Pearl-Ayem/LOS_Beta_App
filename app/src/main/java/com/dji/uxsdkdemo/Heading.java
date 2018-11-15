@@ -71,7 +71,7 @@ public class Heading extends DialogFragment {
     private Double headingCalc;
     private double droneLocationLat = 181, droneLocationLng = 181;
     private FlightController mFlightController;
-    private FlightControllerState  mFlightControllerState;
+    private FlightControllerState mFlightControllerState;
     private Attitude mFlightAttitude;
     private static String BASE_LOCATION = "Use Current Location";
     private static String SELECT_LOCATION = "Select one";
@@ -113,7 +113,6 @@ public class Heading extends DialogFragment {
 //             * What this implies: BOTH heading and tie-point need to be null for pointDroneToTrueNorth() to be run
 
             pointDroneToTrueNorth();
-
 
 
 //             * ELSE case: This will run if even one of the two are not null. Usually happens if coordinates for only origin or dest are set but not both
@@ -321,7 +320,7 @@ public class Heading extends DialogFragment {
         outState.putString("tie_point", this.tie_pointStr);
     }
 
-    private void  updateHeading() {
+    private void updateHeading() {
         try {
             double heading = getHeading(origin, tie_point);
             this.mHeading.setText(" Heading: " + heading);
@@ -449,16 +448,19 @@ public class Heading extends DialogFragment {
                 }
             });
 
-//            Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
-//            builder.roll(0);
-//            builder.pitch(0);
-//            Float newYaw = (headingCalc).floatValue();
-//            builder.yaw(newYaw);
-//            sendRotateGimbalCommand(builder.build());
+            Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
+            builder.roll(0);
+            builder.pitch(0);
             Float newYaw = (headingCalc).floatValue();
-            Attitude TurnAttitude = new Attitude(0,0,newYaw);
-            setmFlightAttitude(TurnAttitude);
-            mFlightControllerState.setAttitude(mFlightAttitude);
+            builder.yaw(newYaw);
+            sendRotateGimbalCommand(builder.build());
+
+
+
+//            Float newYaw = (headingCalc).floatValue();
+//            Attitude TurnAttitude = new Attitude(0, 0, newYaw);
+//            setmFlightAttitude(TurnAttitude);
+//            mFlightControllerState.setAttitude(mFlightAttitude);
 
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "Null Pointer Found in pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
@@ -518,17 +520,16 @@ public class Heading extends DialogFragment {
 
     private void pointDroneToTrueNorth() {
         try {
-            gimbal.setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
+            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
                 @Override
                 public void onResult(DJIError error) {
-                    if (error== null) {
+                    if (error == null) {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal Mode set to FPV", Toast.LENGTH_SHORT).show();
                     } else {
                         Toast.makeText(getContext(), "pointToNorth- Gimbal mode cannot be set to FPV", Toast.LENGTH_SHORT).show();
                     }
                 }
             });
-
 
 
 //             * Positive heading -> East of North
@@ -538,36 +539,35 @@ public class Heading extends DialogFragment {
 
             float droneHeading = getDroneHeading();
             Toast.makeText(getContext(), "pointToNorth- Current AC Heading is: " + droneHeading, Toast.LENGTH_LONG).show();
-            Attitude FlightAttitude = new Attitude(0,0, 0);
-            setmFlightAttitude(FlightAttitude);
-            mFlightControllerState.setAttitude(mFlightAttitude);
+//            Attitude FlightAttitude = new Attitude(0, 0, 0);
+//            setmFlightAttitude(FlightAttitude);
+//            mFlightControllerState.setAttitude(mFlightAttitude);
 
-//            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE);
-//
+            final Rotation.Builder rotateToTrueNorthBuilder = new Rotation.Builder();
+            rotateToTrueNorthBuilder.mode(RotationMode.ABSOLUTE_ANGLE);
+
 //            rotateToTrueNorthBuilder.roll(0);
 //            rotateToTrueNorthBuilder.pitch(0);
-//            float rotateTo = droneHeading * (-1);
-//            Toast.makeText(getContext(), "pointToNorth - AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
-//            rotateToTrueNorthBuilder.yaw(rotateTo);
-//            gimbal.rotate(rotateToTrueNorthBuilder.build(), new CommonCallbacks.CompletionCallback() {
-//                @Override
-//                public void onResult(DJIError djiError) {
-//                    if (djiError == null) {
-//                        Toast.makeText(getContext(), "Drone rotated to true north. Current Drone Heading:  " + getDroneHeading(), Toast.LENGTH_LONG).show();
-//                    } else {
-//                        Toast.makeText(getContext(), "Drone could not be rotated to North", Toast.LENGTH_LONG).show();
-//                    }
-//                }
-//            });
+
+            float rotateTo = droneHeading * (-1);
+            Toast.makeText(getContext(), "pointToNorth - AC will rotate to: " + rotateTo, Toast.LENGTH_LONG).show();
+            rotateToTrueNorthBuilder.yaw(rotateTo);
+            gimbal.rotate(rotateToTrueNorthBuilder.build(), new CommonCallbacks.CompletionCallback() {
+                @Override
+                public void onResult(DJIError djiError) {
+                    if (djiError == null) {
+                        Toast.makeText(getContext(), "Drone rotated to true north", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getContext(), "Drone could not be rotated to North", Toast.LENGTH_LONG).show();
+                    }
+                }
+            });
         } catch (NullPointerException e) {
             Toast.makeText(getContext(), "pointToNorth -  Null Pointer", Toast.LENGTH_SHORT).show();
         }
 
 
     }
-
-
-
 
 
     //====================================================================================================
