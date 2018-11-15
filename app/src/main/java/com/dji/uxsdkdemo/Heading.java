@@ -77,6 +77,7 @@ public class Heading extends DialogFragment {
     private static String SELECT_LOCATION = "Select one";
     private static String DRONE_LOCATION = "Use Drone Location";
     private static final String[] dropdown = new String[]{SELECT_LOCATION, BASE_LOCATION, DRONE_LOCATION};
+    private int currentGimbalId = 0;
 
 
     //====================================================================================================
@@ -105,6 +106,18 @@ public class Heading extends DialogFragment {
         }
         if (getGimbalInstance() != null) {
             gimbal = getGimbalInstance();
+            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+                        @Override
+                        public void onResult(DJIError error) {
+                            if (error == null) {
+                                Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                            } else {
+                                Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                    }
+            );
         }
 
         if (((MapsActivity) getActivity()).getHeadingOrg() == null && ((MapsActivity) getActivity()).getHeadingDest() == null) {
@@ -437,16 +450,16 @@ public class Heading extends DialogFragment {
         try {
             Toast.makeText(getContext(), "In Method pointGimbalToTiePoint", Toast.LENGTH_SHORT).show();
 
-            gimbal.setMode(GimbalMode.FPV, new CommonCallbacks.CompletionCallback() {
-                @Override
-                public void onResult(DJIError error) {
-                    if (error == null) {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to FPV", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to FPV", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+//            gimbal.setMode(GimbalMode.YAW_FOLLOW, new CommonCallbacks.CompletionCallback() {
+//                @Override
+//                public void onResult(DJIError error) {
+//                    if (error == null) {
+//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    } else {
+//                        Toast.makeText(getContext(), "pointGimbalToTiePoint- Gimbal Mode cannot be set to YAW_FOLLOW", Toast.LENGTH_SHORT).show();
+//                    }
+//                }
+//            });
 
             Rotation.Builder builder = new Rotation.Builder().mode(RotationMode.ABSOLUTE_ANGLE).time(1);
             builder.roll(0);
@@ -454,7 +467,6 @@ public class Heading extends DialogFragment {
             Float newYaw = (headingCalc).floatValue();
             builder.yaw(newYaw);
             sendRotateGimbalCommand(builder.build());
-
 
 
 //            Float newYaw = (headingCalc).floatValue();
@@ -491,7 +503,7 @@ public class Heading extends DialogFragment {
             BaseProduct product = DJISDKManager.getInstance().getProduct();
             if (product != null) {
                 if (product instanceof Aircraft) {
-                    gimbal = ((Aircraft) product).getGimbals().get(0);
+                    gimbal = ((Aircraft) product).getGimbals().get(currentGimbalId);
                 } else {
                     gimbal = product.getGimbal();
                 }
